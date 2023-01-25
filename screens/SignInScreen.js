@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { Text, View, Image, StyleSheet, useWindowDimensions, SafeAreaView, TouchableOpacity } from "react-native";
 import { useNavigationContainerRef } from "@react-navigation/native";
-import Logo from "../assets/Facebook_f_logo_(2019).svg.png";
+import Logo from "../assets/images/Facebook_f_logo_(2019).svg.png";
 import CustomInput from "./CustomInput";
 import CustomButton from "./CustomButton";
 import * as RootNavigation from "../navigation/RootNavigation"

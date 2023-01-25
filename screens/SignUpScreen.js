@@ -2,14 +2,12 @@ import React, {useState} from 'react'
 import { View, Text, StyleSheet, Image, SafeAreaView, TouchableOpacity } from 'react-native'
 import CustomButton from './CustomButton'
 import CustomInput from './CustomInput'
-import Logo from '../assets/Facebook_f_logo_(2019).svg.png'
+import Logo from '../assets/images/Facebook_f_logo_(2019).svg.png'
 import MyDatePicker from './DatePicker'
 import * as RootNavigation from '../navigation/RootNavigation'
 
 
 const SignUp = () => {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
     const [username, setUsername] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
@@ -53,16 +51,6 @@ const SignUp = () => {
             />
             <View style={styles.form}>
                 <CustomInput
-                    placeholder="Tên"
-                    value={firstName}
-                    setValue={setFirstName}
-                />
-                <CustomInput
-                    placeholder="Họ"
-                    value={lastName}
-                    setValue={setLastName}
-                />
-                <CustomInput
                     placeholder="Tên đăng nhập"
                     value={username}
                     setValue={setUsername}
@@ -94,7 +82,6 @@ const SignUp = () => {
                     secureTextEntry
                 />
             </View>
-<<<<<<< HEAD
             <View>
 
             </View>
@@ -105,13 +92,6 @@ const SignUp = () => {
                     setSelectedDate={setSelectedDate}
                 />
             </View>
-=======
-            <Text style={styles.birthdayText}>Sinh nhật</Text>
-            <MyDatePicker
-                date={selectedDate}
-                setSelectedDate={setSelectedDate}
-            />
->>>>>>> 40435d3189ad598a04dbdc4c89b2a804b0031f19
             <View style={styles.rule}>
                 <Text style={styles.ruleText}>
                     Nhấn xác nhận đồng nghĩa với bạn đã đọc và đồng ý với{' '}
