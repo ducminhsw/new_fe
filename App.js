@@ -93,11 +93,18 @@ export default function App() {
                         ({ navigation }) => ({
                             title: 'Message',
                             headerLeft: () => {
-                                return <Image style={styles.image} source={
-                                    {
-                                        uri: 'https://firebasestorage.googleapis.com/v0/b/danentang-1edea.appspot.com/o/stock_avatar.jpg?alt=media&token=778bec4b-00bb-481d-bdd9-e2b5ac55aa99'
-                                    }
-                                } />
+                                return (<View style={styles.chatViewHeaderLeftContainer}>
+                                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                                            <Ionicons name="md-arrow-back" size={responsiveFontSize(3)} color="#006AFF" />
+                                    </TouchableOpacity>
+                                    <View style={{padding: 10}}>
+                                        <Image style={styles.image} source={
+                                            {
+                                                uri: 'https://firebasestorage.googleapis.com/v0/b/danentang-1edea.appspot.com/o/stock_avatar.jpg?alt=media&token=778bec4b-00bb-481d-bdd9-e2b5ac55aa99'
+                                            }
+                                        } />
+                                    </View>
+                                </View>)
                             },
                             headerLeftContainerStyle: {
                                 paddingHorizontal: 10
