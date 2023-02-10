@@ -10,9 +10,11 @@ import Separator from '../components/Separator'
 import { avatar_basic, BaseURL, coverImage_basic } from '../ultis/Constants'
 
 const ProfileViewScreen = ({ route }) => {
-    const navigation = useNavigation()
     const appContext = useContext(AppContext)
-    let flatListMsgRef;
+    appContext.loginState.socket.on("connect", () => {
+        console.log("this is socket id ");
+    });
+    const navigation = useNavigation()
 
     const { id, avatar, username, coverImage, is_friend, description, birthday } = route.params.user_info
     const user_state = route.params.user_info
@@ -236,7 +238,7 @@ const ProfileViewScreen = ({ route }) => {
     var MSG_LIST = [{}]
 
     const generateKey = (numberOfCharacters) => {
-        return require('random-string')({length: numberOfCharacters});
+        return require('random-string')({ length: numberOfCharacters });
     }
 
     useEffect(() => {
@@ -297,7 +299,7 @@ const ProfileViewScreen = ({ route }) => {
 
     const refreshFlatList = (activeKey) => {
         setState((prevState) => {
-            return{
+            return {
                 deletedRowKey: activeKey
             };
         });
@@ -382,7 +384,7 @@ const ProfileViewScreen = ({ route }) => {
                                         `${BaseURL}/it4788/chat/get_conversation`,
                                         {},
                                         {
-                                            params:{    // token: token login
+                                            params: {    // token: token login
                                                 token: appContext.loginState.token,
                                                 index: 0,
                                                 count: 50,
@@ -390,20 +392,22 @@ const ProfileViewScreen = ({ route }) => {
                                             }
                                         }
                                     )
-                                    console.log('get conversation');
-                        
+                                    console.log('Get conversation with id: ' + res.data.data.conversationId);
+                                    console.log(res.data.data.conversationId)
+
                                     MSG_LIST = res.data.data.conversation;
-                                    
+                                    setRoom("" + res.data.data.conversationId)
+                                    appContext.loginState.socket.emit("join_room", room)
                                     navigation.navigate('ChatView', {
                                         data: MSG_LIST,
                                         partner_id: id,
                                         username: username,
-                                        conversation_id: '',
-                                        avatar: avatar ? avatar : avatar_basic.uri
+                                        conversation_id: room,
+                                        avatar: avatar ? avatar : avatar_basic.uri,
                                     });
                                     console.log(avatar_basic.uri)
                                     return;
-                                    
+
                                 } catch (error) {
                                     console.log(`error: ${error}`)
                                     console.log('create conversation')
@@ -412,35 +416,35 @@ const ProfileViewScreen = ({ route }) => {
                                         `${BaseURL}/it4788/chat/create_conversation`,
                                         {},
                                         {
-                                            params:{
+                                            params: {
                                                 conversationId: newKey,
                                                 firstUser: appContext.loginState.user_id,   // My Id
                                                 secondUser: id
                                             }
                                         }
                                     )
-                        
+
                                     console.log(res.data.data)
-                                    
+
                                     MSG_LIST = [
                                         {
                                             message_id: generateKey(8),
-                                                message: 'Giờ đây 2 bạn đã có thể nhắn tin cho nhau',
-                                                sender: {
-                                                    id: appContext.loginState.user_id,  // My ID
-                                                }
+                                            message: 'Giờ đây 2 bạn đã có thể nhắn tin cho nhau',
+                                            sender: {
+                                                id: appContext.loginState.user_id,  // My ID
+                                            }
                                         }
                                     ]
-    
+
                                     refreshFlatList(generateKey(5));
-                                    
+
                                     navigation.navigate('ChatView', {
                                         data: MSG_LIST,
                                         partner_id: id,
                                         username: username,
-                                        conversation_id: newKey
+                                        conversation_id: newKey,
                                     })
-                        
+
                                 }
                             }}
                             style={{

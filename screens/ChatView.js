@@ -1,7 +1,15 @@
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import React, { useState, useEffect, useContext } from "react";
 import {
-    View, StyleSheet, Text, TouchableOpacity, TextInput, FlatList, Image, SafeAreaView, KeyboardAvoidingView,
+    View,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    TextInput,
+    FlatList,
+    Image,
+    SafeAreaView,
+    KeyboardAvoidingView,
     ScrollView
 } from "react-native";
 
@@ -9,9 +17,10 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { useNavigation } from '@react-navigation/native'
 import { responsiveFontSize, responsiveHeight } from "react-native-responsive-dimensions";
 import axios from 'axios'
-
+import io from "socket.io-client"
 import AppContext from "../context/AppContext";
 import { BaseURL } from "../ultis/Constants";
+const socket = io("http://192.168.1.11:3001")
 
 const ChatView = ({ route }) => {
     let flatListMsgRef;
@@ -19,60 +28,53 @@ const ChatView = ({ route }) => {
     const appContext = useContext(AppContext);
     const height = useHeaderHeight()
 
-    // var conversation_Id='';
-    const [conversation_Id, setConversation_Id] = useState('');
-    const [mess, setMess] = useState("")
-
     var MSG_LIST = route.params.data
     const partner_id = route.params.partner_id
-    const conversationId = route.params.conversation_Id
+    const conversation_id = route.params.conversation_id
     const avatarChat = route.params.avatar
-    // console.log(avatarChat)
 
-    const getConversationId = async () => {
-        const res = await axios.post(
-            `${BaseURL}/it4788/chat/get_list_conversation`,
-            {},
-            {
-                params: {   // Login Token
-                    index: 0,
-                    count: 50,
-                    token: appContext.loginState.token
+    if (appContext.loginState.socket.connected) {
+        console.log('Connected to server');
+      } else {
+        console.log('Disconnected from server');
+      }
+
+    useEffect(() => {
+        appContext.loginState.socket.on("receive_message", (data) => {
+            console.log("data is reset " + data)
+            const newKey = generateKey(8);
+            const newMessage = {
+                message_id: newKey,
+                message: data.message,
+                sender: {
+                    id: data.senderId
                 }
-            }
-        )
-        const response = res.data.data;
+            };
+            MSG_LIST.push(newMessage);
+            refreshFlatList(newKey);
+        })
+    }, [appContext.loginState.socket])
 
-        for (var i in response) {
-            if (JSON.stringify(response[i].partner.id) == JSON.stringify(partner_id)) {
-                setConversation_Id(response[i].id);
-                return;
-            }
-
-        }
-    }
-    
     const refreshFlatList = (activeKey) => {
         setState((prevState) => {
             return {
                 deletedRowKey: activeKey
             };
         });
-        flatListMsgRef.scrollToEnd({ animated: true })
+        // flatListMsgRef.scrollToEnd({ animated: true })
     }
-    
+
     const [state, setState] = useState({
         newMsg: '',
         idCate: 1
     })
-    
+
     const generateKey = (numberOfCharacters) => {
         return require('random-string')({ length: numberOfCharacters });
     }
-    
+
     useEffect(() => {
-        getConversationId();
-        flatListMsgRef.scrollToEnd();
+        // flatListMsgRef.scrollToEnd({ animated: true });
     })
 
     return (
@@ -110,59 +112,58 @@ const ChatView = ({ route }) => {
                 keyboardVerticalOffset={height}
                 enabled>
                 {/* <ScrollView> */}
-                    <View style={styles.inputContainer}>
-                        <View style={styles.sendMsgContainer}>
-                            <TextInput
-                                placeholder="Aa"
-                                style={styles.input}
-                                onChangeText={setMess}
-                                value={mess} />
-                            <Entypo name="emoji-happy" size={responsiveFontSize(2.5)} color="gray" />
-                        </View>
-
-                        <TouchableOpacity onPress={async () => {
-                            getConversationId();
-                            console.log(conversation_Id);
-                            console.log(typeof (conversation_Id));
-
-                            state.newMsg = mess
-
-                            if (state.newMsg == '') {
-                                console.log('message is null');
-                                return;
-                            }
-                            const newKey = generateKey(8);
-                            const newMessage = {
-                                message_id: newKey,
-                                message: state.newMsg,
-                                sender: {
-                                    id: appContext.loginState.user_id,  // My ID
-                                }
-                            };
-                            MSG_LIST.push(newMessage);
-                            refreshFlatList(newKey);
-
-                            try {
-                                const res = await axios.post(
-                                    `${BaseURL}/it4788/chat/add_dialog`,
-                                    {},
-                                    {
-                                        params: {
-                                            dialogId: generateKey(8),
-                                            conversationId: conversation_Id,  // conversationId
-                                            senderId: appContext.loginState.user_id,   // My ID => firstUser or secondUser
-                                            content: state.newMsg
-                                        }
-                                    }
-                                )
-                                console.log(res.data)
-                            } catch (error) {
-                                console.log(`error: ${error}`);
-                            }
-                        }} style={styles.icon}>
-                            <FontAwesome5 name="paper-plane" size={responsiveFontSize(3.5)} color="#006AFF" />
-                        </TouchableOpacity>
+                <View style={styles.inputContainer}>
+                    <View style={styles.sendMsgContainer}>
+                        <TextInput
+                            placeholder="Aa"
+                            style={styles.input}
+                            onChangeText={newText => setState({ newMsg: newText })}
+                            value={state.newMsg} />
+                        <Entypo name="emoji-happy" size={responsiveFontSize(2.5)} color="gray" />
                     </View>
+
+                    <TouchableOpacity onPress={async () => {
+                        if (state.newMsg == '') {
+                            console.log('message is null');
+                            return;
+                        }
+                        const newKey = generateKey(8);
+                        const newMessage = {
+                            message_id: newKey,
+                            message: state.newMsg,
+                            sender: {
+                                id: appContext.loginState.user_id,
+                            }
+                        };
+                        MSG_LIST.push(newMessage);
+                        refreshFlatList(newKey);
+
+                        try {
+                            const res = await axios.post(
+                                `${BaseURL}/it4788/chat/add_dialog`,
+                                {},
+                                {
+                                    params: {
+                                        dialogId: generateKey(8),
+                                        conversationId: conversation_id,  // conversationId
+                                        senderId: appContext.loginState.user_id,   // My ID => firstUser or secondUser
+                                        content: state.newMsg
+                                    }
+                                }
+                            )
+                            console.log(res.data)
+                            appContext.loginState.socket.emit("send_message", {
+                                room: conversation_id,
+                                senderId: appContext.loginState.user_id,
+                                message: state.newMsg
+                            })
+                        } catch (error) {
+                            console.log(`error: ${error}`);
+                        }
+                    }} style={styles.icon}>
+                        <FontAwesome5 name="paper-plane" size={responsiveFontSize(3.5)} color="#006AFF" />
+                    </TouchableOpacity>
+                </View>
                 {/* </ScrollView> */}
             </KeyboardAvoidingView>
         </SafeAreaView>

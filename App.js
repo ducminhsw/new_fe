@@ -36,7 +36,6 @@ import axios from "axios";
 import io from 'socket.io-client';
 
 const Stack = createStackNavigator()
-const socket = io.connect("http://localhost:3001")
 
 export default function App() {
   const initLoginState = {
@@ -54,6 +53,7 @@ export default function App() {
     friend_list: [],
     block_list: [],
     received: [],
+    socket: null
   };
 
   const [loginState, dispatch] = useReducer(reducer, initLoginState);
@@ -206,7 +206,10 @@ export default function App() {
                                     }
                                     return (
                                         <View style={styles.chatViewHeaderLeftContainer}>
-                                            <TouchableOpacity onPress={() => navigation.goBack()}>
+                                            <TouchableOpacity onPress={() => {
+                                                // appContext.loginState.socket.emit("disconnect")
+                                                navigation.goBack()
+                                            }}>
                                                 <Ionicons name="md-arrow-back" size={responsiveFontSize(3)} color="#006AFF" />
                                             </TouchableOpacity>
                                             <View style={styles.chatViewProPicContainer}>

@@ -2,6 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useState } from "react";
 import { View, Image, StyleSheet, useWindowDimensions, SafeAreaView, TouchableOpacity, ImageComponent, Alert } from "react-native";
 import { useNetInfo } from "@react-native-community/netinfo";
+import io from "socket.io-client"
 
 import Logo from "../assets/images/facebook_logo.png";
 import CustomButton from "../components/CustomButton";
@@ -59,9 +60,10 @@ const SignIn = () => {
                 link: user_data.link,
                 birthday: user_data.birthday.slice(0, 10),
                 avatarURL: user_data.avatar,
-                coverImgURL: user_data.coverImage
+                coverImgURL: user_data.coverImage,
+                socket: io("http://192.168.1.11:3001")
             })
-            navigation.navigate("Home")
+            navigation.navigate("Profile")
 
             // get_list_friend
             try {

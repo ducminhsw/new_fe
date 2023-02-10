@@ -17,7 +17,8 @@ export const reducer = (state, action) => {
                 avatarURL: (action.avatarURL) ?  action.avatarURL : avatar_basic.uri,
                 coverImgURL: (action.coverImgURL) ?  action.coverImgURL : coverImage_basic.uri,
                 friend_list: action.friend_list ? action.friend_list : [],
-                block_list: action.block_list ? action.block_list : []
+                block_list: action.block_list ? action.block_list : [],
+                socket: action.socket
             }
         case 'LOGOUT': {
             return {
@@ -35,7 +36,8 @@ export const reducer = (state, action) => {
                 coverImgURL: null,
                 friend_list: [],
                 block_list: [],
-                received: []
+                received: [],
+                socket: null
             }
         }
         case 'CHANGE_INFO_USER': {
