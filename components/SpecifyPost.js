@@ -8,30 +8,14 @@ import {
 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Avatar from "./Avatar";
-import Hyperlink from "react-native-hyperlink";
-import * as WebBrowser from "expo-web-browser";
 import PostImage from "./PostImage";
+import CustomText from "./CustomText";
 import { postLike } from "../api";
 import AppContext from "../context/AppContext";
-const DefaultLink = (props) => {
-  const [result, setResult] = useState(null);
-  const _handlePressButtonAsync = async (url) => {
-    let result = await WebBrowser.openBrowserAsync(url);
-    setResult(result);
-  };
-  return (
-    <Hyperlink
-      onPress={(url) => _handlePressButtonAsync(url)}
-      linkStyle={{ color: "#2980b9", fontSize: 15 }}
-    >
-      <Text style={{ fontSize: 15, padding: 16 }}>{props.description}</Text>
-    </Hyperlink>
-  );
-};
 const PostContent = ({ description, images }) => {
   return (
     <View style={styles.postContainer}>
-      <DefaultLink description={description} />
+      <CustomText text={description} />
       <PostImage images={images} />
     </View>
   );
