@@ -20,6 +20,7 @@ import Avatar from "../../components/Avatar";
 import * as ImagePicker from "expo-image-picker";
 import { imagePost, textPost } from "../../api";
 import AppContext from "../../context/AppContext";
+import { FONTS } from "../../constants";
 const MAX_NUMBER_IMAGE = 4;
 const WIDTH_MODAL = Dimensions.get("window").width;
 const IMAGE_HEIGHT = 400;
@@ -106,10 +107,11 @@ const TopBar = ({ enablePost, changeModalVisible, posting }) => {
 };
 
 const User = ({ avatar }) => {
+  const appContext = useContext(AppContext)
   return (
     <View style={styles.user}>
       <Avatar avatar={avatar} />
-      <Text style={{ marginLeft: 8 }}>User 1</Text>
+      <Text style={{ marginLeft: 8, fontFamily: FONTS.medium }}>{appContext.loginState.username}</Text>
     </View>
   );
 };
@@ -131,7 +133,7 @@ const DefaultLink = () => {
 const LongEditText = ({ setDescription }) => {
   return (
     <TextInput
-      style={{ padding: 16 }}
+      style={{ padding: 16, marginTop: 8 }}
       multiline
       onChangeText={(text) => {
         setDescription(text);
@@ -421,7 +423,7 @@ const Post = () => {
       />
       <ScrollView style={styles.container}>
         <View style={styles.postContainer}>
-          <User />
+          <User avatar={appContext.loginState.avatarURL}/>
           <LongEditText setDescription={setDescription} />
           <RenderImages images={images} removeImage={removeImage} />
         </View>
@@ -467,7 +469,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#eeeeee",
     borderBottomColor: "solid #000000",
     width: "100%",
-    height: 93,
+    height: 60,
     flexDirection: "row",
     paddingLeft: 16,
     paddingRight: 8,
@@ -493,10 +495,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
   },
   user: {
-    width: "100%",
+    width: "90%",
     flexDirection: "row",
     alignItems: "center",
     marginTop: 16,
+    marginStart: 16
   },
   modalContainer: {
     flex: 1,
