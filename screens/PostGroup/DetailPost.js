@@ -19,11 +19,14 @@ import { getComments, addComment } from "../../api";
 import LoadingComment from "../../components/LoadingComment";
 import DeleteModal from "../../components/DeleteModal";
 import AppContext from "../../context/AppContext";
+
 const COMMENTS_PER_LOAD = 8;
+
 const FixedBottomBar = ({ id, _addComment, setInputPosition }) => {
   const appContext = useContext(AppContext);
   const [sendComment, setSendComment] = useState("");
   const textInputRef = useRef();
+
   // console.log(sendComment);
   const addNewComment = async () => {
     await addComment(id, sendComment, appContext.loginState.token)
@@ -33,6 +36,7 @@ const FixedBottomBar = ({ id, _addComment, setInputPosition }) => {
       })
       .catch((err) => console.log(err));
   };
+  
   return (
     <View style={styles.BottomBar}>
       <Avatar small />
@@ -212,6 +216,8 @@ export default DetailPost = ({ route }) => {
     </View>
   );
 };
+
+
 const styles = StyleSheet.create({
   Container: {
     flex: 1,

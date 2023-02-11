@@ -47,7 +47,7 @@ const PostDirect = ({ avatar }) => {
     <TouchableOpacity
       style={styles.Input}
       onPress={() =>
-        navigation.navigate({ name: "Post", params: { userImage: avatar } })
+        navigation.navigate({ name: "Post" })
       }
     >
       <Text>Bạn đang nghĩ gì?</Text>
@@ -55,10 +55,11 @@ const PostDirect = ({ avatar }) => {
   );
 };
 const PersonalNewsFeed = React.memo(function (props) {
+  const appContext = useContext(AppContext)
   return (
     <View style={styles.subContainer}>
       <View style={styles.Row}>
-        <Avatar source={props.avatarURL} online />
+        <Avatar avatar={appContext.loginState.avatarURL} online />
         <PostDirect />
       </View>
       <View style={styles.Divider}></View>
@@ -247,10 +248,10 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     paddingLeft: 16,
     width: 300,
-    height: 50,
-    borderWidth: 2,
+    height: 42,
+    borderWidth: 1,
     borderRadius: 20,
-    borderColor: "#737272",
+    borderColor: "#dddddd",
     justifyContent: "center",
   },
   Divider: {

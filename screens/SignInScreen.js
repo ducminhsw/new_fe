@@ -138,7 +138,7 @@ const SignIn = () => {
                 })
             }
         } catch (error) {
-            console.log(error)
+            console.log(JSON.stringify(error))
             if (JSON.stringify(error) == "[AxiosError: timeout exceeded]") {
                 Alert.alert(
                     "Lỗi mạng",
@@ -153,7 +153,7 @@ const SignIn = () => {
             }
             Alert.alert(
                 "Lỗi",
-                "Tài khoản hoặc mật khẩu không chính xác",
+                "Có lỗi về tài khoản, hoặc đường truyền  của bạn, xin vui lòng kiểm tra lại",
                 [
                     {
                         text: "OK",

@@ -20,16 +20,16 @@ import ChatView from "./screens/ChatView";
 import UserInfo from "./screens/UserInfo";
 import { Post, DetailPost } from "./screens/PostGroup";
 import {
-  responsiveFontSize,
-  responsiveHeight,
+    responsiveFontSize,
+    responsiveHeight,
 } from "react-native-responsive-dimensions";
 import {
-  Alert,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Text,
+    Alert,
+    Image,
+    StyleSheet,
+    TouchableOpacity,
+    View,
+    Text,
 } from "react-native";
 import { BaseURL } from "./ultis/Constants";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
@@ -272,44 +272,44 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  image: {
-    width: responsiveHeight(5),
-    height: responsiveHeight(5),
-    borderRadius: 200,
-  },
-  profilePic: {
-    borderRadius: 100,
-    width: responsiveHeight(3),
-    height: responsiveHeight(3),
-    resizeMode: "cover",
-    margin: 5,
-  },
-  chatViewHeaderLeftContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  name: {
-    fontSize: responsiveFontSize(2),
-    fontWeight: "bold",
-  },
-  chatViewProPicContainer: {
-    padding: 10,
-  },
-  chatViewHeaderRightContainer: {
-    flexDirection: "row",
-  },
-  info: {
-    paddingHorizontal: 10,
-  },
-  // lastOnlineText: {
-  //     fontSize: responsiveFontSize(1.5),
-  //     color: 'gray'
-  // },
-  // call: {
-  //     paddingHorizontal: 10
-  // },
-  // video: {
-  //     paddingHorizontal: 10
-  // },
+    image: {
+        width: responsiveHeight(4),
+        height: responsiveHeight(4),
+        borderRadius: 200,
+    },
+    profilePic: {
+        borderRadius: 100,
+        width: responsiveHeight(3),
+        height: responsiveHeight(3),
+        resizeMode: "cover",
+        margin: 5,
+    },
+    chatViewHeaderLeftContainer: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    name: {
+        fontSize: responsiveFontSize(2),
+        fontWeight: "bold",
+    },
+    chatViewProPicContainer: {
+        padding: 10,
+    },
+    chatViewHeaderRightContainer: {
+        flexDirection: "row",
+    },
+    info: {
+        paddingHorizontal: 10,
+    },
+    // lastOnlineText: {
+    //     fontSize: responsiveFontSize(1.5),
+    //     color: 'gray'
+    // },
+    // call: {
+    //     paddingHorizontal: 10
+    // },
+    // video: {
+    //     paddingHorizontal: 10
+    // },
 });
