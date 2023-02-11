@@ -63,7 +63,7 @@ const SignIn = () => {
                 coverImgURL: user_data.coverImage,
                 socket: io("http://192.168.1.11:3001")
             })
-            navigation.navigate("Profile")
+            navigation.navigate("Home")
 
             // get_list_friend
             try {
@@ -138,7 +138,7 @@ const SignIn = () => {
                 })
             }
         } catch (error) {
-            console.log(error)
+            console.log(JSON.stringify(error))
             if (JSON.stringify(error) == "[AxiosError: timeout exceeded]") {
                 Alert.alert(
                     "Lỗi mạng",
@@ -153,7 +153,7 @@ const SignIn = () => {
             }
             Alert.alert(
                 "Lỗi",
-                "Tài khoản hoặc mật khẩu không chính xác",
+                "Có lỗi về tài khoản, hoặc đường truyền  của bạn, xin vui lòng kiểm tra lại",
                 [
                     {
                         text: "OK",

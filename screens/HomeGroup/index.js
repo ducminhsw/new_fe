@@ -14,35 +14,28 @@ import Feed from "./Feed";
 import Notification from "./Notification";
 import Setting from "./Setting";
 import Friend from "./Friend";
-import { NavigationContext } from "../../navigations/MainNavigation";
+import { NavigationContext } from "../../App";
 import { useNavigation } from "@react-navigation/native";
-const TopBar = () => {
+import Statusbar from "../../components/Statusbar";
+const TopBar = ({ setEnable }) => {
   const navigation = useNavigation();
-  const navigationRef = useContext(NavigationContext);
-  const name = navigationRef?.current?.getCurrentRoute()?.name;
-  let enable = true;
-  if (name) {
-    if (!(name === "Feed")) enable = false;
-  }
   return (
-    enable && (
-      <View style={styles.subContainer}>
-        <Text style={styles.appName}>Facebook</Text>
-        <View style={styles.row}>
-          <TouchableOpacity style={styles.btn}>
-            <Feather name="search" size={23} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() => {
-              navigation.navigate("HomeChat");
-            }}
-          >
-            <MaterialCommunityIcons name="facebook-messenger" size={23} />
-          </TouchableOpacity>
-        </View>
+    <View style={styles.subContainer}>
+      <Text style={styles.appName}>Facebook</Text>
+      <View style={styles.row}>
+        <TouchableOpacity style={styles.btn}>
+          <Feather name="search" size={23} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => {
+            navigation.navigate("HomeChat");
+          }}
+        >
+          <MaterialCommunityIcons name="facebook-messenger" size={23} />
+        </TouchableOpacity>
       </View>
-    )
+    </View>
   );
 };
 const HomeTab = createMaterialTopTabNavigator();
@@ -51,7 +44,6 @@ const HomeNavigator = () => {
     <HomeTab.Navigator
       screenOptions={({ route }) => ({
         tabBarShowLabel: false,
-        // swipeEnabled: false,
         tabBarIcon: ({ focused, color, size }) => {
           if (route.name === "Feed") {
             return (
@@ -97,11 +89,21 @@ const HomeNavigator = () => {
   );
 };
 export default Home = () => {
+  const navigationRef = useContext(NavigationContext);
+  const name = navigationRef?.current?.getCurrentRoute()?.name;
+  const enable = !(
+    name === "Friend" ||
+    name === "Notification" ||
+    name === "Setting"
+  );
   return (
-    <View style={styles.container}>
-      <TopBar />
-      <HomeNavigator />
-    </View>
+    <>
+      <View style={styles.container}>
+        {/* {enable && <TopBar />} */}
+        <TopBar />
+        <HomeNavigator />
+      </View>
+    </>
   );
 };
 export { Feed, Friend, Notification, Setting };

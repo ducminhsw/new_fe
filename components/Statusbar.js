@@ -1,9 +1,9 @@
 import * as React from 'react';
-import {View,StatusBar } from 'react-native';
+import {View,StatusBar,StyleSheet } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 export default Statusbar = (
   {
-    backgroundColor,
+    backgroundColor = "#ffffff",
     barStyle = "dark-content",
   }
 ) => {
@@ -13,7 +13,8 @@ export default Statusbar = (
         <StatusBar
           animated={true}
           backgroundColor={backgroundColor}
-          barStyle={barStyle} />
+          barStyle={barStyle}
+     />
      </View>
    );
 }

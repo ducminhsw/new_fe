@@ -19,8 +19,7 @@ import { responsiveFontSize, responsiveHeight } from "react-native-responsive-di
 import axios from 'axios'
 import io from "socket.io-client"
 import AppContext from "../context/AppContext";
-import { BaseURL } from "../ultis/Constants";
-const socket = io("http://192.168.1.11:3001")
+import { avatar_basic, BaseURL } from "../ultis/Constants";
 
 const ChatView = ({ route }) => {
     let flatListMsgRef;
@@ -32,12 +31,6 @@ const ChatView = ({ route }) => {
     const partner_id = route.params.partner_id
     const conversation_id = route.params.conversation_id
     const avatarChat = route.params.avatar
-
-    if (appContext.loginState.socket.connected) {
-        console.log('Connected to server');
-      } else {
-        console.log('Disconnected from server');
-      }
 
     useEffect(() => {
         appContext.loginState.socket.on("receive_message", (data) => {
@@ -56,12 +49,14 @@ const ChatView = ({ route }) => {
     }, [appContext.loginState.socket])
 
     const refreshFlatList = (activeKey) => {
+        flatListMsgRef.scrollToEnd({ animated: true })
         setState((prevState) => {
             return {
                 deletedRowKey: activeKey
             };
         });
-        // flatListMsgRef.scrollToEnd({ animated: true })
+        console.log("croll to the end")
+        flatListMsgRef.scrollToEnd({ animated: true })
     }
 
     const [state, setState] = useState({
@@ -74,8 +69,8 @@ const ChatView = ({ route }) => {
     }
 
     useEffect(() => {
-        // flatListMsgRef.scrollToEnd({ animated: true });
-    })
+        flatListMsgRef.scrollToEnd({ animated: true });
+    }, [])
 
     return (
         <SafeAreaView style={styles.container}>
@@ -94,7 +89,7 @@ const ChatView = ({ route }) => {
                         :
                         <View style={styles.receivedContainer}>
                             <View style={styles.proPicContainer}>
-                                <Image style={styles.proPic} source={{ uri: avatarChat }} />
+                                <Image style={styles.proPic} source={{ uri: avatarChat ? avatarChat : avatar_basic }} />
                             </View>
                             <View style={styles.receivedMsgContainer}>
                                 <Text style={styles.receivedMsg}>{item.message}</Text>
@@ -145,7 +140,7 @@ const ChatView = ({ route }) => {
                                 {
                                     params: {
                                         dialogId: generateKey(8),
-                                        conversationId: conversation_id,  // conversationId
+                                        conversationId: "" + conversation_id,  // conversationId
                                         senderId: appContext.loginState.user_id,   // My ID => firstUser or secondUser
                                         content: state.newMsg
                                     }

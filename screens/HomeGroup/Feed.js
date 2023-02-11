@@ -4,7 +4,7 @@ import React, {
   useState,
   useRef,
   useCallback,
-  useContext
+  useContext,
 } from "react";
 import {
   StyleSheet,
@@ -47,7 +47,7 @@ const PostDirect = ({ avatar }) => {
     <TouchableOpacity
       style={styles.Input}
       onPress={() =>
-        navigation.navigate({ name: "Post", params: { userImage: avatar } })
+        navigation.navigate({ name: "Post" })
       }
     >
       <Text>Bạn đang nghĩ gì?</Text>
@@ -55,10 +55,11 @@ const PostDirect = ({ avatar }) => {
   );
 };
 const PersonalNewsFeed = React.memo(function (props) {
+  const appContext = useContext(AppContext)
   return (
     <View style={styles.subContainer}>
       <View style={styles.Row}>
-        <Avatar source={props.avatarURL} online />
+        <Avatar avatar={appContext.loginState.avatarURL} online />
         <PostDirect />
       </View>
       <View style={styles.Divider}></View>
@@ -67,7 +68,6 @@ const PersonalNewsFeed = React.memo(function (props) {
 });
 const Feed = ({ route }) => {
   const appContext = useContext(AppContext);
-
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefresing] = useState(false);
   const [data, setData] = useState([]);
@@ -77,7 +77,7 @@ const Feed = ({ route }) => {
   const index = useRef(0);
   const last_id = useRef("");
   const newPostId = useRef("");
-
+  const flatListRef = useRef();
   useFocusEffect(
     React.useCallback(() => {
       if (route.params?.post) {
@@ -163,6 +163,11 @@ const Feed = ({ route }) => {
         } else {
           console.log("Error", error.message);
         }
+        flatListRef.current.scrollToIndex({
+          index: 0,
+          animated: true,
+          viewPosition: 0,
+        });
       });
   };
   const useCache = async () => {
@@ -182,10 +187,11 @@ const Feed = ({ route }) => {
   return (
     <View style={[styles.container]}>
       <FlatList
+        ref={flatListRef}
         data={data}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        ListHeaderComponent={<PersonalNewsFeed props={appContext.loginState}/>}
+        ListHeaderComponent={<PersonalNewsFeed props={appContext.loginState} />}
         onEndReached={() => {
           changeIndex(index.current + POSTS_PER_LOAD);
           setToggle(!toggle);
@@ -242,10 +248,10 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     paddingLeft: 16,
     width: 300,
-    height: 50,
-    borderWidth: 2,
+    height: 42,
+    borderWidth: 1,
     borderRadius: 20,
-    borderColor: "#737272",
+    borderColor: "#dddddd",
     justifyContent: "center",
   },
   Divider: {

@@ -127,7 +127,6 @@ export default SpecifyPost = (props) => {
           </TouchableOpacity>
         </View>
       </View>
-      {/* {bottomMenu&&<BottomMenu setBottomMeNu={setBottomMenu}/>} */}
     </View>
   );
 };

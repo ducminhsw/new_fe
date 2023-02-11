@@ -1,4 +1,4 @@
-import React, { useState,useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Entypo, AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -32,19 +32,17 @@ const PostContent = ({ description, images }) => {
   );
 };
 const Post = (props) => {
-  const appContext = useContext(AppContext)
+  const appContext = useContext(AppContext);
   const [likeDisplay, setLikeDisplay] = useState(props.numLike);
   const [commentDisplay, setCommentDisplay] = useState(props.numComment);
   const [liked, setLiked] = useState(props.is_liked === "1");
   const numLike = props.numLike2;
   const samePer = props.samePer;
   var timeDisplay = props.timeCreated;
-  console.log(props)
   useEffect(() => {
     setCommentDisplay(props.numComment);
   }, [props.numComment]);
   const removeLike = () => {
-    console.log(samePer);
     if (props.is_liked != 1) setLikeDisplay(props.numLike);
     else if (samePer) {
       setLikeDisplay(parseInt(numLike) - 1);
@@ -55,34 +53,34 @@ const Post = (props) => {
     else if (numLike == 0) setLikeDisplay("Bạn");
     else setLikeDisplay(`Bạn và ${numLike} người khác`);
   };
-  const get_item_info = async (userId) => {
-    const res = await axios.post(
-        `${BaseURL}/it4788/user/get_user_info`,
-        {},
-        {
-            params: {
-                token: appContext.loginState.token,
-                user_id: userId
-            }
-        }
-    )
-    const user_info = res.data.data
-    console.log(user_info)
-    if (user_info.id == appContext.loginState.user_id) {
-        navigation.navigate("Profile")
-    } else {
-        navigation.push("ProfileView", {user_info})
-    }
-}
+  // const get_item_info = async (userId) => {
+  //   const res = await axios.post(
+  //     `${BaseURL}/it4788/user/get_user_info`,
+  //     {},
+  //     {
+  //       params: {
+  //         token: appContext.loginState.token,
+  //         user_id: userId,
+  //       },
+  //     }
+  //   );
+  //   const user_info = res.data.data;
+  //   console.log(user_info);
+  //   if (user_info.id == appContext.loginState.user_id) {
+  //     navigation.navigate("Profile");
+  //   } else {
+  //     navigation.push("ProfileView", { user_info });
+  //   }
+  // };
   const navigation = useNavigation();
   return (
     <View style={styles.Container}>
       <View style={styles.Header}>
         <View style={styles.Row}>
           <TouchableOpacity
-            onPress={() => {
-              get_item_info(props.user_id)
-            }}
+            // onPress={() => {
+            //   get_item_info(props.user_id);
+            // }}
           >
             <Avatar avatar={props.avatar} online={props.active} />
           </TouchableOpacity>
@@ -92,11 +90,16 @@ const Post = (props) => {
             <View style={styles.Row}>
               <Text style={styles.Time}>{timeDisplay}</Text>
               <Entypo name="dot-single" size={12} color="#747476" />
-              <Entypo name="globe" size={10} color="#747476" />
+              <Entypo name="globe" size={12} color="#747476" />
             </View>
           </View>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            props.setPersonal(props.authorId === user.id);
+            props.setModalVisible(true);
+          }}
+        >
           <Entypo name="dots-three-horizontal" size={15} color="#222121" />
         </TouchableOpacity>
       </View>
@@ -117,15 +120,17 @@ const Post = (props) => {
             style={styles.Button}
             onPress={() => {
               postLike(props.id, appContext.loginState.token)
-              .then(() => {
-                if (!liked) {
-                  addLike();
-                } else {
-                  removeLike();
-                }
-                setLiked(!liked);
-              })
-              .catch((err)=>{console.log(err)});
+                .then(() => {
+                  if (!liked) {
+                    addLike();
+                  } else {
+                    removeLike();
+                  }
+                  setLiked(!liked);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
             }}
           >
             <View style={styles.Icon}>
@@ -148,13 +153,14 @@ const Post = (props) => {
                   userName: props.userName,
                   timeCreated: props.timeCreated,
                   description: props.description,
-                  numLike: props.numLike,
+                  numLike: likeDisplay,
                   numComment: props.numComment,
                   images: props.images,
                   is_liked: props.is_liked,
                   self_liked: props.self_liked,
                   numLike2: props.numLike2,
                   samePer: props.samePer,
+                  authorId: props.authorId,
                 },
               });
             }}
@@ -204,7 +210,7 @@ const styles = StyleSheet.create({
     color: "#222121",
   },
   Time: {
-    fontSize: 9,
+    fontSize: 12,
     color: "#747476",
   },
   Post: {
@@ -263,7 +269,7 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   Text: {
-    fontSize: 12,
+    fontSize: 14,
     color: "#424040",
   },
   BottomDivider: {
