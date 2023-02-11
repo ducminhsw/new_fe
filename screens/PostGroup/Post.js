@@ -25,9 +25,8 @@ const WIDTH_MODAL = Dimensions.get("window").width;
 const IMAGE_HEIGHT = 400;
 const IMAGE_INSET = 2;
 
-
 const CloseModal = ({ changeModalVisible }) => {
-  const appContext = useContext(AppContext)
+  const appContext = useContext(AppContext);
   const navigation = useNavigation();
   return (
     <View style={styles.modalContainer}>
@@ -57,7 +56,6 @@ const CloseModal = ({ changeModalVisible }) => {
   );
 };
 
-
 const PostErrModal = ({ setPostErrModal }) => {
   return (
     <View style={styles.modalContainer}>
@@ -76,7 +74,6 @@ const PostErrModal = ({ setPostErrModal }) => {
     </View>
   );
 };
-
 
 const TopBar = ({ enablePost, changeModalVisible, posting }) => {
   return (
@@ -108,7 +105,6 @@ const TopBar = ({ enablePost, changeModalVisible, posting }) => {
   );
 };
 
-
 const User = ({ avatar }) => {
   return (
     <View style={styles.user}>
@@ -117,7 +113,6 @@ const User = ({ avatar }) => {
     </View>
   );
 };
-
 
 const DefaultLink = () => {
   return (
@@ -132,7 +127,6 @@ const DefaultLink = () => {
     </Hyperlink>
   );
 };
-
 
 const LongEditText = ({ setDescription }) => {
   return (
@@ -153,7 +147,6 @@ const CloseBtn = ({ removeImage, uri }) => {
     </TouchableOpacity>
   );
 };
-
 
 const FixedBottomBar = (props) => {
   return (
@@ -205,7 +198,6 @@ const FixedBottomBar = (props) => {
   );
 };
 
-
 const takeImageAsync = async () => {
   let result = await ImagePicker.launchCameraAsync({
     allowsEditing: false,
@@ -216,7 +208,6 @@ const takeImageAsync = async () => {
   }
   return [];
 };
-
 
 const pickImageAsync = async () => {
   let result = await ImagePicker.launchImageLibraryAsync({
@@ -231,7 +222,6 @@ const pickImageAsync = async () => {
   }
   return [];
 };
-
 
 const RenderImages = ({ images, removeImage }) => {
   switch (images.length) {
@@ -327,9 +317,8 @@ const RenderImages = ({ images, removeImage }) => {
   }
 };
 
-
 const Post = () => {
-  const appContext = useContext(AppContext)
+  const appContext = useContext(AppContext);
   const navigation = useNavigation();
   const [enablePost, setEnablePost] = useState(false);
   const [enableModal, setEnableModal] = useState(false);
@@ -389,7 +378,7 @@ const Post = () => {
           }
         });
     } else
-      textPost(description, formData, appContext.loginState.token)
+      textPost(description, appContext.loginState.token)
         .then((res) => {
           console.log(res.data.data);
           setIsLoading(false);
@@ -398,9 +387,15 @@ const Post = () => {
             params: { post: true, post_id: res.data.data.id },
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((error) => {
           setIsLoading(false);
+          if (error.response) {
+            console.log(error.response.data);
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log("Error", error.message);
+          }
         });
   };
   return (
@@ -462,7 +457,6 @@ const Post = () => {
   );
 };
 export default Post;
-
 
 const styles = StyleSheet.create({
   container: {

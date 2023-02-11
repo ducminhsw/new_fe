@@ -153,7 +153,7 @@ const Post = (props) => {
                   userName: props.userName,
                   timeCreated: props.timeCreated,
                   description: props.description,
-                  numLike: props.numLike,
+                  numLike: likeDisplay,
                   numComment: props.numComment,
                   images: props.images,
                   is_liked: props.is_liked,

@@ -1,253 +1,138 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Entypo, AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import Avatar from "./Avatar";
-import Hyperlink from "react-native-hyperlink";
-import * as WebBrowser from "expo-web-browser";
-import PostImage from "./PostImage";
-import { postLike } from "../api";
-const DefaultLink = (props) => {
-  const [result, setResult] = useState(null);
-  const _handlePressButtonAsync = async (url) => {
-    let result = await WebBrowser.openBrowserAsync(url);
-    setResult(result);
-  };
+import React, { useState } from "react";
+import {
+  Button,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import Modal from "react-native-modal";
+const BottomMenu = ({ setModalVisible, personal, setDeleModalVisible }) => {
+  const disableModal = () => setModalVisible(false);
   return (
-    <Hyperlink
-      onPress={(url) => _handlePressButtonAsync(url)}
-      linkStyle={{ color: "#2980b9", fontSize: 15 }}
-    >
-      <Text style={{ fontSize: 15, padding: 16 }}>{props.description}</Text>
-    </Hyperlink>
-  );
-};
-const PostContent = ({ description, images }) => {
-  return (
-    <View style={styles.postContainer}>
-      <DefaultLink description={description} />
-      <PostImage images={images} />
-    </View>
-  );
-};
-const Post = (props) => {
-  const [likeDisplay, setLikeDisplay] = useState(props.numLike);
-  const [commentDisplay, setCommentDisplay] = useState(props.numComment);
-  const [liked, setLiked] = useState(props.is_liked === "1");
-  const numLike = props.numLike2;
-  const samePer = props.samePer;
-  var timeDisplay = props.timeCreated;
-  useEffect(() => {
-    setCommentDisplay(props.numComment);
-  }, [props.numComment]);
-  const removeLike = () => {
-    console.log(samePer);
-    if (props.is_liked != 1) setLikeDisplay(props.numLike);
-    else if (samePer) {
-      setLikeDisplay(parseInt(numLike) - 1);
-    } else setLikeDisplay(props.numLike.replace("Bạn, ", ""));
-  };
-  const addLike = () => {
-    if (props.is_liked == "1") setLikeDisplay(props.numLike);
-    else if (numLike == 0) setLikeDisplay("Bạn");
-    else setLikeDisplay(`Bạn và ${numLike} người khác`);
-  };
-  const navigation = useNavigation();
-  return (
-    <View style={styles.Container}>
-      <View style={styles.Header}>
-        <View style={styles.Row}>
-          <Avatar avatar={props.avatar} online={props.active} />
-          <View style={{ paddingLeft: 10 }}>
-            <Text style={styles.Text}>{props.userName}</Text>
-            <View style={styles.Row}>
-              <Text style={styles.Time}>{timeDisplay}</Text>
-              <Entypo name="dot-single" size={12} color="#747476" />
-              <Entypo name="globe" size={12} color="#747476" />
-            </View>
-          </View>
-        </View>
-        <TouchableOpacity
-          onPress={() => {
-            props.setPersonal(props.authorId === user.id);
-            props.setModalVisible(true);
-          }}
-        >
-          <Entypo name="dots-three-horizontal" size={15} color="#222121" />
-        </TouchableOpacity>
-      </View>
-      <PostContent description={props.description} images={props.images} />
-      <View style={styles.Footer}>
-        <View style={styles.FooterCount}>
-          <View style={styles.Row}>
-            <View style={styles.IconCount}>
-              <AntDesign name="like1" size={12} color="#FFFFFF" />
-            </View>
-            <Text style={styles.TextCount}>{likeDisplay}</Text>
-          </View>
-          <Text style={styles.TextCount}>{commentDisplay} comment</Text>
-        </View>
-        <View style={styles.Separator} />
-        <View style={styles.FooterMenu}>
-          <TouchableOpacity
-            style={styles.Button}
-            onPress={() => {
-              postLike(props.id)
-                .then(() => {
-                  if (!liked) {
-                    addLike();
-                  } else {
-                    removeLike();
-                  }
-                  setLiked(!liked);
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-            }}
-          >
-            <View style={styles.Icon}>
-              <AntDesign
-                name="like2"
-                size={20}
-                color={!liked ? "#424040" : "#3a86e9"}
-              />
-            </View>
-            <Text style={{ color: !liked ? "#424040" : "#3a86e9" }}>Like</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.Button}
-            onPress={() => {
-              navigation.navigate({
-                name: "DetailPost",
-                params: {
-                  id: props.id,
-                  avatar: props.avatar,
-                  userName: props.userName,
-                  timeCreated: props.timeCreated,
-                  description: props.description,
-                  numLike: props.numLike,
-                  numComment: props.numComment,
-                  images: props.images,
-                  is_liked: props.is_liked,
-                  self_liked: props.self_liked,
-                  numLike2: props.numLike2,
-                  samePer: props.samePer,
-                  authorId: props.authorId,
-                },
-              });
-            }}
-          >
-            <View style={styles.Icon}>
-              <MaterialCommunityIcons
-                name="comment-outline"
-                size={20}
-                color="#424040"
-              />
-            </View>
-            <Text>Comment</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
-  );
-};
-export default Post;
+    <View style={styles.flexView}>
+      <Modal
+        onBackdropPress={() => disableModal()}
+        onBackButtonPress={() => disableModal()}
+        isVisible={true}
+        swipeDirection="down"
+        onSwipeComplete={disableModal}
+        animationIn="bounceInUp"
+        animationOut="bounceOutDown"
+        animationInTiming={900}
+        animationOutTiming={500}
+        backdropTransitionInTiming={1000}
+        backdropTransitionOutTiming={500}
+        style={styles.modal}
+      >
+        <View style={styles.modalContent}>
+          <View style={styles.center}>
+            <View style={styles.barIcon} />
+            {personal && (
+              <View style={styles.itemList}>
+                <TouchableOpacity style={styles.item}>
+                  <MaterialIcons name="mode-edit" size={24} color="black" />
+                  <View style={styles.itemContent}>
+                    <Text style={styles.Header}>Chỉnh sửa bài viết</Text>
+                    <Text style={styles.Description}>
+                      Tôi muốn thay đổi bài viết đã tạo
+                    </Text>
+                  </View>
+                </TouchableOpacity>
 
+                <TouchableOpacity
+                  style={styles.item}
+                  onPress={() => {
+                    disableModal();
+                    setDeleModalVisible(true);
+                  }}
+                >
+                  <MaterialIcons name="delete" size={24} color="black" />
+                  <View style={styles.itemContent}>
+                    <Text style={styles.Header}>Xoá bài viết</Text>
+                    <Text style={styles.Description}>
+                      Tôi muốn xoá bài viết này
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            <View style={styles.itemList}>
+              <TouchableOpacity style={styles.item}>
+                <MaterialIcons name="report" size={24} color="black" />
+                <View style={styles.itemContent}>
+                  <Text style={styles.Header}>Báo cáo bài viết</Text>
+                  <Text style={styles.Description}>
+                    Tôi lo ngại về bài viết này
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
+};
+export default BottomMenu;
 const styles = StyleSheet.create({
-  Container: {
+  flexView: {
     flex: 1,
-    width: "100%",
   },
-  postContainer: {
-    width: "100%",
-    backgroundColor: "#ffffff",
+  modal: {
+    justifyContent: "flex-end",
+    margin: 0,
   },
-  Header: {
-    backgroundColor: "#ffffff",
-    height: 50,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingTop: 6,
-    paddingLeft: 11,
-    paddingRight: 11,
+  modalContent: {
+    backgroundColor: "#eeeeee",
+    paddingTop: 20,
+    paddingLeft: 16,
+    paddingRight: 16,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+    paddingBottom: 20,
   },
-  Row: {
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  User: {
-    fontSize: 12,
-    fontWeight: "bold",
-    color: "#222121",
-  },
-  Time: {
-    fontSize: 12,
-    color: "#747476",
-  },
-  Post: {
-    fontSize: 12,
-    color: "#222121",
-    lineHeight: 16,
-    paddingLeft: 11,
-    paddingRight: 11,
-  },
-  Photo: {
-    marginTop: 9,
-    width: "100%",
-    height: 300,
-    resizeMode: "contain",
-  },
-  FooterCount: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingTop: 9,
-    paddingBottom: 9,
-    paddingLeft: 11,
-    paddingRight: 11,
-  },
-  IconCount: {
-    backgroundColor: "#1878f3",
-    width: 20,
-    height: 20,
-    bordeRadius: 10,
+  center: {
+    display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 6,
   },
-  TextCount: {
-    fontSize: 13,
-    color: "#424040",
+  barIcon: {
+    width: 60,
+    height: 5,
+    backgroundColor: "#bbb",
+    borderRadius: 3,
   },
-  Separator: {
+  itemList: {
+    paddingTop: 8,
+    paddingBottom: 8,
+    marginBottom: 20,
+    flexDirection: "column",
+    marginVertical: 16,
+    backgroundColor: "#ffffff",
     width: "100%",
-    height: 0.5,
-    backgroundColor: "#f0f2f5",
+    borderRadius: 10,
   },
-  FooterMenu: {
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingTop: 9,
-    paddingBottom: 9,
-    paddingLeft: 11,
-    paddingRight: 11,
-  },
-  Button: {
+  item: {
+    width: "100%",
     flexDirection: "row",
     alignItems: "center",
+    paddingLeft: 16,
   },
-  Icon: {
-    marginRight: 6,
+  itemContent: {
+    marginLeft: 16,
+    flexDirection: "column",
+    marginVertical: 8,
   },
-  Text: {
-    fontSize: 14,
-    color: "#424040",
+  Header: {
+    fontSize: 16,
+    fontWeight: "600",
   },
-  BottomDivider: {
-    width: "100%",
-    height: 9,
-    backgroundColor: "#f0f2f5",
+  Description: {
+    fontSize: 12,
+    fontWeight: "400",
   },
 });

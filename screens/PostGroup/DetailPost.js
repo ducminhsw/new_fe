@@ -68,7 +68,8 @@ const FixedBottomBar = ({ id, _addComment, setInputPosition }) => {
     </View>
   );
 };
-function FlatListHeader({ params, setModalVisible }) {
+function FlatListHeader({ params, setModalVisible,numComment }) {
+  console.log(numComment);
   return (
     <>
       <SpecifyPost
@@ -78,7 +79,7 @@ function FlatListHeader({ params, setModalVisible }) {
         timeCreated={params.timeCreated}
         description={params.description}
         numLike={params.numLike}
-        numComment={params.numComment}
+        numComment={numComment}
         images={params.images}
         is_liked={params.is_liked}
         self_liked={params.self_liked}
@@ -89,7 +90,7 @@ function FlatListHeader({ params, setModalVisible }) {
       />
       <View style={styles.Separator} />
       <View style={{ padding: 8 }}>
-        <Text>{params.numComment} comment</Text>
+        <Text>{numComment} comment</Text>
       </View>
       <View style={styles.Separator} />
     </>
@@ -107,7 +108,7 @@ export default DetailPost = ({ route }) => {
   const [numComment, setNumComment] = useState(params.numComment);
   const flatListRef = useRef();
   const personal = params.authorId === appContext.loginState.id;
-  console.log(deleteModalVisible);
+  // console.log(deleteModalVisible);
   const renderComment = ({ item }) => {
     return (
       <Comment
@@ -180,7 +181,7 @@ export default DetailPost = ({ route }) => {
             <View style={{ width: "100%", height: 100 }}></View>
           }
           ListHeaderComponent={
-            <FlatListHeader params={params} setModalVisible={setModalVisible} />
+            <FlatListHeader params={params} setModalVisible={setModalVisible} numComment={numComment} />
           }
         />
         {isLoading && (
