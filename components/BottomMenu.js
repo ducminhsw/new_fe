@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Entypo, AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -7,6 +7,7 @@ import Hyperlink from "react-native-hyperlink";
 import * as WebBrowser from "expo-web-browser";
 import PostImage from "./PostImage";
 import { postLike } from "../api";
+import AppContext from "../context/AppContext";
 const DefaultLink = (props) => {
   const [result, setResult] = useState(null);
   const _handlePressButtonAsync = async (url) => {
@@ -31,6 +32,7 @@ const PostContent = ({ description, images }) => {
   );
 };
 const Post = (props) => {
+  const appContext = useContext(AppContext)
   const [likeDisplay, setLikeDisplay] = useState(props.numLike);
   const [commentDisplay, setCommentDisplay] = useState(props.numComment);
   const [liked, setLiked] = useState(props.is_liked === "1");
@@ -92,7 +94,7 @@ const Post = (props) => {
           <TouchableOpacity
             style={styles.Button}
             onPress={() => {
-              postLike(props.id)
+              postLike(props.id, appContext.loginState.token)
                 .then(() => {
                   if (!liked) {
                     addLike();
