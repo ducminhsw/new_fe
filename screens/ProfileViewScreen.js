@@ -303,13 +303,11 @@ const ProfileViewScreen = ({ route }) => {
                 deletedRowKey: activeKey
             };
         });
-        // flatListMsgRef.scrollToEnd({animated: true})
     }
 
     const Item = ({ item }) => {
         return (
             <TouchableOpacity
-                // onPress={() => navigation.push("ProfileView", { item })}
                 style={{ alignItems: "center", marginHorizontal: 5 }}>
                 <Image
                     source={item.avatar}

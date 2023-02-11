@@ -2,17 +2,13 @@ import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { responsiveFontSize, responsiveHeight, responsiveWidth } from "react-native-responsive-dimensions";
 import { Ionicons } from "@expo/vector-icons";
+import { avatar_basic } from "../ultis/Constants"
 
 const Chat = ( {name, message, hasSeen, isLastMessageYours, time, profilePicture} ) => {
-
     return (
             <View style={styles.container}>
                 <View style={styles.proPicContainer}>
-                    <Image style={styles.proPic} source={
-                        {
-                            uri: profilePicture
-                        }
-                    } />
+                    <Image style={styles.proPic} source={{ uri: profilePicture ? profilePicture : avatar_basic.uri}} />
                 </View>
                 <View style={styles.descriptionContainer}>
                     <View style={styles.nameContainer}>
@@ -49,7 +45,8 @@ const styles = StyleSheet.create({
         width: '100%',
         height: responsiveHeight(9),
         paddingHorizontal: 8,
-        marginVertical: 2
+        marginVertical: 2,
+        backgroundColor: "white"
     },
     proPicContainer: {
         width: '17%',
@@ -57,8 +54,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     proPic: {
-        width: responsiveHeight(7),
-        height: responsiveHeight(7),
+        width: responsiveHeight(4),
+        height: responsiveHeight(4),
         borderRadius: 200
     },
     descriptionContainer: {

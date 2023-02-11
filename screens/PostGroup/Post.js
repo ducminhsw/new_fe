@@ -24,6 +24,8 @@ const MAX_NUMBER_IMAGE = 4;
 const WIDTH_MODAL = Dimensions.get("window").width;
 const IMAGE_HEIGHT = 400;
 const IMAGE_INSET = 2;
+
+
 const CloseModal = ({ changeModalVisible }) => {
   const appContext = useContext(AppContext)
   const navigation = useNavigation();
@@ -54,6 +56,8 @@ const CloseModal = ({ changeModalVisible }) => {
     </View>
   );
 };
+
+
 const PostErrModal = ({ setPostErrModal }) => {
   return (
     <View style={styles.modalContainer}>
@@ -72,6 +76,8 @@ const PostErrModal = ({ setPostErrModal }) => {
     </View>
   );
 };
+
+
 const TopBar = ({ enablePost, changeModalVisible, posting }) => {
   return (
     <View style={styles.topBarContainer}>
@@ -101,6 +107,8 @@ const TopBar = ({ enablePost, changeModalVisible, posting }) => {
     </View>
   );
 };
+
+
 const User = ({ avatar }) => {
   return (
     <View style={styles.user}>
@@ -109,6 +117,8 @@ const User = ({ avatar }) => {
     </View>
   );
 };
+
+
 const DefaultLink = () => {
   return (
     <Hyperlink
@@ -122,6 +132,8 @@ const DefaultLink = () => {
     </Hyperlink>
   );
 };
+
+
 const LongEditText = ({ setDescription }) => {
   return (
     <TextInput
@@ -141,6 +153,8 @@ const CloseBtn = ({ removeImage, uri }) => {
     </TouchableOpacity>
   );
 };
+
+
 const FixedBottomBar = (props) => {
   return (
     <View style={styles.BottomBar}>
@@ -190,6 +204,8 @@ const FixedBottomBar = (props) => {
     </View>
   );
 };
+
+
 const takeImageAsync = async () => {
   let result = await ImagePicker.launchCameraAsync({
     allowsEditing: false,
@@ -200,6 +216,8 @@ const takeImageAsync = async () => {
   }
   return [];
 };
+
+
 const pickImageAsync = async () => {
   let result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -213,6 +231,7 @@ const pickImageAsync = async () => {
   }
   return [];
 };
+
 
 const RenderImages = ({ images, removeImage }) => {
   switch (images.length) {
@@ -307,6 +326,8 @@ const RenderImages = ({ images, removeImage }) => {
       return;
   }
 };
+
+
 const Post = () => {
   const appContext = useContext(AppContext)
   const navigation = useNavigation();
@@ -441,6 +462,8 @@ const Post = () => {
   );
 };
 export default Post;
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
