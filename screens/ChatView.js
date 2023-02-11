@@ -1,5 +1,5 @@
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import {
     View,
     StyleSheet,
@@ -22,10 +22,10 @@ import AppContext from "../context/AppContext";
 import { avatar_basic, BaseURL } from "../ultis/Constants";
 
 const ChatView = ({ route }) => {
-    let flatListMsgRef;
     const navigation = useNavigation();
     const appContext = useContext(AppContext);
     const height = useHeaderHeight()
+    const messEndRef = useRef(null)
 
     var MSG_LIST = route.params.data
     const partner_id = route.params.partner_id
@@ -45,18 +45,18 @@ const ChatView = ({ route }) => {
             };
             MSG_LIST.push(newMessage);
             refreshFlatList(newKey);
+            messEndRef.current?.scrollToEnd()
         })
     }, [appContext.loginState.socket])
 
     const refreshFlatList = (activeKey) => {
-        flatListMsgRef.scrollToEnd({ animated: true })
         setState((prevState) => {
             return {
                 deletedRowKey: activeKey
             };
         });
         console.log("croll to the end")
-        flatListMsgRef.scrollToEnd({ animated: true })
+        messEndRef.current?.scrollToEnd()
     }
 
     const [state, setState] = useState({
@@ -68,15 +68,11 @@ const ChatView = ({ route }) => {
         return require('random-string')({ length: numberOfCharacters });
     }
 
-    useEffect(() => {
-        flatListMsgRef.scrollToEnd({ animated: true });
-    }, [])
-
     return (
         <SafeAreaView style={styles.container}>
             <FlatList
                 style={{ flex: 10 }}
-                ref={(ref) => { flatListMsgRef = ref }}
+                ref={messEndRef}
                 data={MSG_LIST}
                 keyExtractor={item => item.message_id}
                 renderItem={({ item, index }) => {
@@ -104,9 +100,8 @@ const ChatView = ({ route }) => {
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ flex: 0.1 }}
-                keyboardVerticalOffset={height}
+                keyboardVerticalOffset={height+60}
                 enabled>
-                {/* <ScrollView> */}
                 <View style={styles.inputContainer}>
                     <View style={styles.sendMsgContainer}>
                         <TextInput
@@ -159,7 +154,6 @@ const ChatView = ({ route }) => {
                         <FontAwesome5 name="paper-plane" size={responsiveFontSize(3.5)} color="#006AFF" />
                     </TouchableOpacity>
                 </View>
-                {/* </ScrollView> */}
             </KeyboardAvoidingView>
         </SafeAreaView>
     )
