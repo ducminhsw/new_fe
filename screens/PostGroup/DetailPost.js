@@ -9,6 +9,7 @@ import {
   TextInput,
   Keyboard,
   Modal,
+  SafeAreaView,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import Avatar from "../../components/Avatar";
@@ -38,7 +39,7 @@ const FixedBottomBar = ({ id, _addComment, setInputPosition }) => {
   };
   
   return (
-    <View style={styles.BottomBar}>
+    <SafeAreaView style={styles.BottomBar}>
       <Avatar small />
       <View style={styles.subBottomBar}>
         <TextInput
@@ -65,7 +66,7 @@ const FixedBottomBar = ({ id, _addComment, setInputPosition }) => {
           <MaterialIcons name="send" size={24} color="#3a86e9" />
         </TouchableOpacity>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 function FlatListHeader({ params, setModalVisible,numComment }) {

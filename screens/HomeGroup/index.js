@@ -99,7 +99,8 @@ export default Home = () => {
   return (
     <>
       <View style={styles.container}>
-        {enable && <TopBar />}
+        {/* {enable && <TopBar />} */}
+        <TopBar />
         <HomeNavigator />
       </View>
     </>

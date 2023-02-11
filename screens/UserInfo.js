@@ -66,8 +66,6 @@ export default function UserInfo({route}){
                             <Text style={styles.name}>{username}</Text>
                             <Text style={styles.name}>{birthday}</Text>
                             <Text style={styles.name}>{description}</Text>
-                            {/* <Text style={styles.facebookTitle}>Facebook</Text>
-                            <Text style={styles.caption}>You're friend on Facebok</Text> */}
                         </View>
                         <TouchableOpacity onPress={ deleteChat } style={styles.bottomBtn1}>
                             <Text style={styles.btnText}>DELETE</Text>
