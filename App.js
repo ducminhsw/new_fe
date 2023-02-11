@@ -78,7 +78,7 @@ export default function App() {
           <NavigationContainer ref={navigationRef}>
             <>
             <Statusbar/>
-            <Stack.Navigator initialRouteName="SignIn">
+            <Stack.Navigator initialRouteName="HomeChat">
               <Stack.Screen
                 name="Home"
                 component={Home}

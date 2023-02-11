@@ -53,38 +53,37 @@ const Post = (props) => {
     else if (numLike == 0) setLikeDisplay("Bạn");
     else setLikeDisplay(`Bạn và ${numLike} người khác`);
   };
-  // const get_item_info = async (userId) => {
-  //   const res = await axios.post(
-  //     `${BaseURL}/it4788/user/get_user_info`,
-  //     {},
-  //     {
-  //       params: {
-  //         token: appContext.loginState.token,
-  //         user_id: userId,
-  //       },
-  //     }
-  //   );
-  //   const user_info = res.data.data;
-  //   console.log(user_info);
-  //   if (user_info.id == appContext.loginState.user_id) {
-  //     navigation.navigate("Profile");
-  //   } else {
-  //     navigation.push("ProfileView", { user_info });
-  //   }
-  // };
+  const get_item_info = async (userId) => {
+    const res = await axios.post(
+      `${BaseURL}/it4788/user/get_user_info`,
+      {},
+      {
+        params: {
+          token: appContext.loginState.token,
+          user_id: userId,
+        },
+      }
+    );
+    const user_info = res.data.data;
+    console.log(user_info);
+    if (user_info.id == appContext.loginState.user_id) {
+      navigation.navigate("Profile");
+    } else {
+      navigation.push("ProfileView", { user_info });
+    }
+  };
   const navigation = useNavigation();
   return (
     <View style={styles.Container}>
       <View style={styles.Header}>
         <View style={styles.Row}>
           <TouchableOpacity
-            // onPress={() => {
-            //   get_item_info(props.user_id);
-            // }}
+            onPress={() => {
+              get_item_info(props.user_id);
+            }}
           >
             <Avatar avatar={props.avatar} online={props.active} />
           </TouchableOpacity>
-
           <View style={{ paddingLeft: 10 }}>
             <Text style={styles.Text}>{props.userName}</Text>
             <View style={styles.Row}>
@@ -96,7 +95,8 @@ const Post = (props) => {
         </View>
         <TouchableOpacity
           onPress={() => {
-            props.setPersonal(props.authorId === user.id);
+            console.log(props.authorId);
+            props.setPersonal(props.authorId ===appContext.loginState.user_id);
             props.setModalVisible(true);
           }}
         >

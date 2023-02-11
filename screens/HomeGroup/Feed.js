@@ -18,6 +18,7 @@ import {
 } from "react-native";
 import Post from "../../components/Post";
 import Avatar from "../../components/Avatar";
+import BottomMenu from "../../components/BottomMenu";
 import { getPost, getListPosts } from "../../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppContext from "../../context/AppContext";
@@ -46,16 +47,14 @@ const PostDirect = ({ avatar }) => {
   return (
     <TouchableOpacity
       style={styles.Input}
-      onPress={() =>
-        navigation.navigate({ name: "Post" })
-      }
+      onPress={() => navigation.navigate({ name: "Post" })}
     >
       <Text>Bạn đang nghĩ gì?</Text>
     </TouchableOpacity>
   );
 };
 const PersonalNewsFeed = React.memo(function (props) {
-  const appContext = useContext(AppContext)
+  const appContext = useContext(AppContext);
   return (
     <View style={styles.subContainer}>
       <View style={styles.Row}>
@@ -73,7 +72,8 @@ const Feed = ({ route }) => {
   const [data, setData] = useState([]);
   const [postErrModal, setPostErrModal] = useState(false);
   const [toggle, setToggle] = useState(false);
-  const [bottomMenu, setBottomMenu] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [personal,setPersonal]= useState(false);
   const index = useRef(0);
   const last_id = useRef("");
   const newPostId = useRef("");
@@ -121,7 +121,9 @@ const Feed = ({ route }) => {
         self_liked={item.self_liked}
         numLike2={item.numLike}
         samePer={item.samePer}
-        setBottomMenu={setBottomMenu}
+        authorId={item.author.id}
+        setModalVisible={setModalVisible}
+        setPersonal={setPersonal}
       />
     );
   };
@@ -223,6 +225,16 @@ const Feed = ({ route }) => {
           <ActivityIndicator size="large" color="#0000ff" />
         </View>
       )}
+       {isModalVisible && (
+        <BottomMenu
+          setModalVisible={setModalVisible}
+          personal={personal}
+          // setDeleModalVisible={setDeleModalVisible}
+        />
+      )}
+      {/* {deleteModalVisible && (
+        <DeteleModal setDeleModalVisible={setDeleModalVisible} />
+      )}  */}
     </View>
   );
 };

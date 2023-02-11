@@ -69,7 +69,7 @@ const FixedBottomBar = ({ id, _addComment, setInputPosition }) => {
   );
 };
 function FlatListHeader({ params, setModalVisible,numComment }) {
-  console.log(numComment);
+  // console.log(numComment);
   return (
     <>
       <SpecifyPost
@@ -107,7 +107,7 @@ export default DetailPost = ({ route }) => {
   const params = route.params;
   const [numComment, setNumComment] = useState(params.numComment);
   const flatListRef = useRef();
-  const personal = params.authorId === appContext.loginState.id;
+  const personal = params.authorId === appContext.loginState.user_id;
   // console.log(deleteModalVisible);
   const renderComment = ({ item }) => {
     return (
