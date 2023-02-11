@@ -63,7 +63,7 @@ const SignIn = () => {
                 coverImgURL: user_data.coverImage,
                 socket: io("http://192.168.1.11:3001")
             })
-            navigation.navigate("Profile")
+            navigation.navigate("Home")
 
             // get_list_friend
             try {

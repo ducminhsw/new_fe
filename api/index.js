@@ -3,7 +3,6 @@ import Constants from "expo-constants";
 import { useContext } from "react";
 import AppContext from "../context/AppContext";
 import { BaseURL } from "../ultis/Constants";
-
 const { manifest } = Constants;
 const api =
   typeof manifest.packagerOpts === `object` && manifest.packagerOpts.dev
@@ -67,7 +66,7 @@ const getListPosts = async (index, count, last_id, token) => {
       token: token,
       index: index,
       count: count,
-      last_id: index ? last_id : null,
+      // last_id: index ? last_id : null,
     },
   });
 };

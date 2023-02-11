@@ -3,7 +3,7 @@ import { Image, StyleSheet, View } from "react-native";
 
 export default Avatar = (props) => {
   const imageUrl= props.avatar;
-  console.log(props)
+  // console.log(props)
   return (
     <View style={styles.Container}>
       <Image

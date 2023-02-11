@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useRef, useEffect,useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,6 +8,7 @@ import {
   FlatList,
   TextInput,
   Keyboard,
+  Modal,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import Avatar from "../../components/Avatar";
@@ -16,10 +17,11 @@ import BottomMenu from "../../components/BottomMenu";
 import Comment from "../../components/Comment";
 import { getComments, addComment } from "../../api";
 import LoadingComment from "../../components/LoadingComment";
+import DeleteModal from "../../components/DeleteModal";
 import AppContext from "../../context/AppContext";
 const COMMENTS_PER_LOAD = 8;
 const FixedBottomBar = ({ id, _addComment, setInputPosition }) => {
-  const appContext = useContext(AppContext)
+  const appContext = useContext(AppContext);
   const [sendComment, setSendComment] = useState("");
   const textInputRef = useRef();
   // console.log(sendComment);
@@ -62,10 +64,37 @@ const FixedBottomBar = ({ id, _addComment, setInputPosition }) => {
     </View>
   );
 };
+function FlatListHeader({ params, setModalVisible }) {
+  return (
+    <>
+      <SpecifyPost
+        id={params.id}
+        avatar={params.avatar}
+        userName={params.userName}
+        timeCreated={params.timeCreated}
+        description={params.description}
+        numLike={params.numLike}
+        numComment={params.numComment}
+        images={params.images}
+        is_liked={params.is_liked}
+        self_liked={params.self_liked}
+        numLike2={params.numLike2}
+        samePer={params.samePer}
+        authorId={params.authorId}
+        setModalVisible={setModalVisible}
+      />
+      <View style={styles.Separator} />
+      <View style={{ padding: 8 }}>
+        <Text>{params.numComment} comment</Text>
+      </View>
+      <View style={styles.Separator} />
+    </>
+  );
+}
 export default DetailPost = ({ route }) => {
-  const appContext = useContext(AppContext)
-
+  const appContext = useContext(AppContext);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [deleteModalVisible, setDeleModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
   const [index, setIndex] = useState(0);
@@ -73,6 +102,8 @@ export default DetailPost = ({ route }) => {
   const params = route.params;
   const [numComment, setNumComment] = useState(params.numComment);
   const flatListRef = useRef();
+  const personal = params.authorId === appContext.loginState.id;
+  console.log(deleteModalVisible);
   const renderComment = ({ item }) => {
     return (
       <Comment
@@ -84,7 +115,12 @@ export default DetailPost = ({ route }) => {
     );
   };
   const getData = async () => {
-    await getComments(params.id, index, COMMENTS_PER_LOAD, appContext.loginState.token)
+    await getComments(
+      params.id,
+      index,
+      COMMENTS_PER_LOAD,
+      appContext.loginState.token
+    )
       .then((res) => {
         setData([...data, ...res.data.data]);
       })
@@ -108,57 +144,8 @@ export default DetailPost = ({ route }) => {
     console.log("UseEffect call!");
     getData();
   }, [index]);
-  const FlatListHeader = () => {
-    return (
-      <View style={{}}>
-        <SpecifyPost
-          id={params.id}
-          avatar={params.avatar}
-          userName={params.userName}
-          timeCreated={params.timeCreated}
-          description={params.description}
-          numLike={params.numLike}
-          numComment={params.numComment}
-          images={params.images}
-          is_liked={params.is_liked}
-          self_liked={params.self_liked}
-          numLike2={params.numLike2}
-          samePer={params.samePer}
-          setModalVisible={setModalVisible}
-        />
-        <View style={styles.Separator} />
-        <View style={{ padding: 8 }}>
-          <Text>{numComment} comment</Text>
-        </View>
-        <View style={styles.Separator} />
-      </View>
-    );
-  };
   return (
     <View style={styles.Container}>
-      <View style={styles.PostContainer}>
-        <SpecifyPost
-          id={params.id}
-          avatar={params.avatar}
-          userName={params.userName}
-          timeCreated={params.timeCreated}
-          description={params.description}
-          numLike={params.numLike}
-          numComment={params.numComment}
-          images={params.images}
-          is_liked={params.is_liked}
-          self_liked={params.self_liked}
-          numLike2={params.numLike2}
-          samePer={params.samePer}
-          setModalVisible={setModalVisible}
-        />
-        <View style={styles.Separator} />
-        <View style={{ padding: 8 }}>
-          <Text>{numComment} comment</Text>
-        </View>
-        <View style={styles.Separator} />
-      </View>
-
       <View style={styles.CommentContainer}>
         <FlatList
           ref={flatListRef}
@@ -188,6 +175,9 @@ export default DetailPost = ({ route }) => {
           ListFooterComponent={
             <View style={{ width: "100%", height: 100 }}></View>
           }
+          ListHeaderComponent={
+            <FlatListHeader params={params} setModalVisible={setModalVisible} />
+          }
         />
         {isLoading && (
           <View>
@@ -209,7 +199,16 @@ export default DetailPost = ({ route }) => {
           setInputPosition={setInputPosition}
         />
       </View>
-      {/* {isModalVisible && <BottomMenu setModalVisible={setModalVisible} />} */}
+      {isModalVisible && (
+        <BottomMenu
+          setModalVisible={setModalVisible}
+          personal={personal}
+          setDeleModalVisible={setDeleModalVisible}
+        />
+      )}
+      {deleteModalVisible && (
+        <DeleteModal setDeleModalVisible={setDeleModalVisible} />
+      )}
     </View>
   );
 };
@@ -218,15 +217,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  PostContainer:{
-    position:'relative',
-    zIndex:-1
-  },
   CommentContainer: {
     flex: 1,
     width: "100%",
     paddingTop: 8,
-    paddingLeft: 16,
   },
   Separator: {
     width: "100%",
