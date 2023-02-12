@@ -32,7 +32,6 @@ const HomeChat = () => {
   var MSG_LIST = [{}];
 
   const getListConversation = async () => {
-    console.log("get list conversations...");
     try {
       const res = await axios.post(
         `${BaseURL}/it4788/chat/get_list_conversation`,

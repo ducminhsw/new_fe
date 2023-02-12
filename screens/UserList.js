@@ -83,7 +83,7 @@ const Users = () => {
                 partner_id: item.id,
                 username: item.username,
                 conversation_id: room,
-                avatar: avatar ? avatar : avatar_basic.uri,
+                avatar: item.avatar ? item.avatar : avatar_basic.uri,
             })
             console.log(avatar_basic.uri)
         } else {
@@ -117,7 +117,7 @@ const Users = () => {
                 partner_id: item.id,
                 username: item.username,
                 conversation_id: room,
-                avatar: avatar ? avatar : avatar_basic.uri,
+                avatar: item.avatar ? item.avatar : avatar_basic.uri,
             })
         }
     }
@@ -126,7 +126,7 @@ const Users = () => {
         console.log(item)
         return (
             <TouchableOpacity
-                onPress={() => getItemChat(item.id)}
+                onPress={() => getItemChat(item)}
                 style={{
                     flexDirection: 'row',
                     alignItems: "center",

@@ -100,7 +100,7 @@ const ChatView = ({ route }) => {
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ flex: 0.1 }}
-                keyboardVerticalOffset={height+60}
+                keyboardVerticalOffset={height}
                 enabled>
                 <View style={styles.inputContainer}>
                     <View style={styles.sendMsgContainer}>
@@ -113,42 +113,40 @@ const ChatView = ({ route }) => {
                     </View>
 
                     <TouchableOpacity onPress={async () => {
-                        if (state.newMsg == '') {
-                            console.log('message is null');
-                            return;
-                        }
-                        const newKey = generateKey(8);
-                        const newMessage = {
-                            message_id: newKey,
-                            message: state.newMsg,
-                            sender: {
-                                id: appContext.loginState.user_id,
-                            }
-                        };
-                        MSG_LIST.push(newMessage);
-                        refreshFlatList(newKey);
-
-                        try {
-                            const res = await axios.post(
-                                `${BaseURL}/it4788/chat/add_dialog`,
-                                {},
-                                {
-                                    params: {
-                                        dialogId: generateKey(8),
-                                        conversationId: "" + conversation_id,  // conversationId
-                                        senderId: appContext.loginState.user_id,   // My ID => firstUser or secondUser
-                                        content: state.newMsg
-                                    }
+                        if (state.newMsg != "") {
+                            const newKey = generateKey(8);
+                            const newMessage = {
+                                message_id: newKey,
+                                message: state.newMsg,
+                                sender: {
+                                    id: appContext.loginState.user_id,
                                 }
-                            )
-                            console.log(res.data)
-                            appContext.loginState.socket.emit("send_message", {
-                                room: conversation_id,
-                                senderId: appContext.loginState.user_id,
-                                message: state.newMsg
-                            })
-                        } catch (error) {
-                            console.log(`error: ${error}`);
+                            };
+                            MSG_LIST.push(newMessage);
+                            refreshFlatList(newKey);
+                            messEndRef.current?.scrollToEnd()
+                            try {
+                                const res = await axios.post(
+                                    `${BaseURL}/it4788/chat/add_dialog`,
+                                    {},
+                                    {
+                                        params: {
+                                            dialogId: generateKey(8),
+                                            conversationId: "" + conversation_id,  // conversationId
+                                            senderId: appContext.loginState.user_id,   // My ID => firstUser or secondUser
+                                            content: state.newMsg
+                                        }
+                                    }
+                                )
+                                appContext.loginState.socket.emit("send_message", {
+                                    room: conversation_id,
+                                    senderId: appContext.loginState.user_id,
+                                    message: state.newMsg
+                                })
+                                messEndRef.current?.scrollToEnd()
+                            } catch (error) {
+                                console.log(`error: ${error}`);
+                            }
                         }
                     }} style={styles.icon}>
                         <FontAwesome5 name="paper-plane" size={responsiveFontSize(3.5)} color="#006AFF" />
