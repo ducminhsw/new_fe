@@ -17,6 +17,7 @@ import {
 import Statusbar from "../../components/Statusbar";
 import { AntDesign, Feather, MaterialIcons, Entypo } from "@expo/vector-icons";
 import Avatar from "../../components/Avatar";
+import { TextUtility } from "../../ultis/TextUtility";
 import * as ImagePicker from "expo-image-picker";
 import { imagePost, textPost } from "../../api";
 import AppContext from "../../context/AppContext";
@@ -25,7 +26,6 @@ const MAX_NUMBER_IMAGE = 4;
 const WIDTH_MODAL = Dimensions.get("window").width;
 const IMAGE_HEIGHT = 400;
 const IMAGE_INSET = 2;
-
 const CloseModal = ({ changeModalVisible }) => {
   const appContext = useContext(AppContext);
   const navigation = useNavigation();
@@ -39,7 +39,10 @@ const CloseModal = ({ changeModalVisible }) => {
         <View style={styles.Divider} />
         <TouchableOpacity
           style={styles.touchableOpacity}
-          onPress={() => navigation.navigate("Feed")}
+          onPress={() => {
+            changeModalVisible(false);
+            navigation.navigate("Feed");
+          }}
         >
           <Text style={{ fontSize: 17, color: "red" }}>Bỏ bài viết</Text>
         </TouchableOpacity>
@@ -107,11 +110,13 @@ const TopBar = ({ enablePost, changeModalVisible, posting }) => {
 };
 
 const User = ({ avatar }) => {
-  const appContext = useContext(AppContext)
+  const appContext = useContext(AppContext);
   return (
     <View style={styles.user}>
       <Avatar avatar={avatar} />
-      <Text style={{ marginLeft: 8, fontFamily: FONTS.medium }}>{appContext.loginState.username}</Text>
+      <Text style={{ marginLeft: 8, fontFamily: FONTS.medium }}>
+        {appContext.loginState.username}
+      </Text>
     </View>
   );
 };
@@ -130,14 +135,16 @@ const DefaultLink = () => {
   );
 };
 
-const LongEditText = ({ setDescription }) => {
+const LongEditText = ({ description, setDescription }) => {
   return (
     <TextInput
-      style={{ padding: 16, marginTop: 8 }}
+      style={{ fontSize: 15, padding: 16, marginTop: 8 }}
       multiline
       onChangeText={(text) => {
-        setDescription(text);
+        const emoji = TextUtility.replaceStringWithIcon(text);
+        setDescription(emoji);
       }}
+      value={description}
       placeholder="Bạn đang nghĩ gì?"
     />
   );
@@ -423,8 +430,11 @@ const Post = () => {
       />
       <ScrollView style={styles.container}>
         <View style={styles.postContainer}>
-          <User avatar={appContext.loginState.avatarURL}/>
-          <LongEditText setDescription={setDescription} />
+          <User avatar={appContext.loginState.avatarURL} />
+          <LongEditText
+            description={description}
+            setDescription={setDescription}
+          />
           <RenderImages images={images} removeImage={removeImage} />
         </View>
         <Modal
@@ -499,7 +509,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 16,
-    marginStart: 16
+    marginStart: 16,
   },
   modalContainer: {
     flex: 1,
