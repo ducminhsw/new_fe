@@ -14,7 +14,7 @@ import Feed from "./Feed";
 import Notification from "./Notification";
 import Setting from "./Setting";
 import Friend from "./Friend";
-import { NavigationContext } from "../../App";
+// import { NavigationContext } from "../../App";
 import { useNavigation } from "@react-navigation/native";
 import Statusbar from "../../components/Statusbar";
 const TopBar = ({ setEnable }) => {
@@ -89,18 +89,18 @@ const HomeNavigator = () => {
   );
 };
 export default Home = () => {
-  const navigationRef = useContext(NavigationContext);
-  const name = navigationRef?.current?.getCurrentRoute()?.name;
-  const enable = !(
-    name === "Friend" ||
-    name === "Notification" ||
-    name === "Setting"
-  );
+  // const navigationRef = useContext(NavigationContext);
+  // const name = navigationRef?.current?.getCurrentRoute()?.name;
+  // const enable = !(
+  //   name === "Friend" ||
+  //   name === "Notification" ||
+  //   name === "Setting"
+  // );
   return (
     <>
       <View style={styles.container}>
-        {enable && <TopBar />}
-        {/* <TopBar /> */}
+        {/* {enable && <TopBar />} */}
+        <TopBar />
         <HomeNavigator />
       </View>
     </>

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect,useContext } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -20,24 +20,20 @@ import { getComments, addComment } from "../../api";
 import LoadingComment from "../../components/LoadingComment";
 import DeleteModal from "../../components/DeleteModal";
 import AppContext from "../../context/AppContext";
-
+import { TextUtility } from "../../ultis/TextUtility";
 const COMMENTS_PER_LOAD = 8;
 
 const FixedBottomBar = ({ id, _addComment, setInputPosition }) => {
   const appContext = useContext(AppContext);
   const [sendComment, setSendComment] = useState("");
   const textInputRef = useRef();
-
-  // console.log(sendComment);
   const addNewComment = async () => {
     await addComment(id, sendComment, appContext.loginState.token)
       .then((res) => {
-        // console.log(res.data.data);
         _addComment(res.data.data);
       })
       .catch((err) => console.log(err));
   };
-  
   return (
     <SafeAreaView style={styles.BottomBar}>
       <Avatar small />
@@ -47,12 +43,13 @@ const FixedBottomBar = ({ id, _addComment, setInputPosition }) => {
           multiline={true}
           placeholder="Viết bình luận..."
           style={{ paddingLeft: 8 }}
-          onChangeText={(text) => setSendComment(text)}
-          onFocus={() => setInputPosition(220)}
+          onChangeText={(text) => setSendComment(TextUtility.replaceStringWithIcon(text))}
+          onFocus={() => setInputPosition(225)}
           onBlur={() => {
             Keyboard.dismiss();
             setInputPosition(0);
           }}
+          value={sendComment}
         />
       </View>
       {sendComment && (
@@ -69,7 +66,7 @@ const FixedBottomBar = ({ id, _addComment, setInputPosition }) => {
     </SafeAreaView>
   );
 };
-function FlatListHeader({ params, setModalVisible,numComment }) {
+function FlatListHeader({ params, setModalVisible, numComment }) {
   // console.log(numComment);
   return (
     <>
@@ -88,6 +85,7 @@ function FlatListHeader({ params, setModalVisible,numComment }) {
         samePer={params.samePer}
         authorId={params.authorId}
         setModalVisible={setModalVisible}
+        status= {params.status}
       />
       <View style={styles.Separator} />
       <View style={{ padding: 8 }}>
@@ -182,7 +180,11 @@ export default DetailPost = ({ route }) => {
             <View style={{ width: "100%", height: 100 }}></View>
           }
           ListHeaderComponent={
-            <FlatListHeader params={params} setModalVisible={setModalVisible} numComment={numComment} />
+            <FlatListHeader
+              params={params}
+              setModalVisible={setModalVisible}
+              numComment={numComment}
+            />
           }
         />
         {isLoading && (
@@ -218,7 +220,6 @@ export default DetailPost = ({ route }) => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   Container: {

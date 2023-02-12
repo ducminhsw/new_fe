@@ -6,6 +6,7 @@ import Avatar from "./Avatar";
 import PostImage from "./PostImage";
 import CustomText from "./CustomText";
 import { postLike } from "../api";
+import { StatusToEmoji } from "../constants/emoji";
 import AppContext from "../context/AppContext";
 const PostContent = ({ description, images }) => {
   // console.log(description);
@@ -27,6 +28,9 @@ const Post = (props) => {
   useEffect(() => {
     setCommentDisplay(props.numComment);
   }, [props.numComment]);
+  useEffect(() => {
+    setLikeDisplay(props.numLike);
+  }, [props.numLike]);
   const removeLike = () => {
     if (props.is_liked != 1) setLikeDisplay(props.numLike);
     else if (samePer) {
@@ -70,7 +74,15 @@ const Post = (props) => {
             <Avatar avatar={props.avatar} online={props.active} />
           </TouchableOpacity>
           <View style={{ paddingLeft: 10 }}>
-            <Text style={styles.Text}>{props.userName}</Text>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.Text}>{props.userName}</Text>
+              {props.status && (
+                <Text>
+                  đang {StatusToEmoji[props.status]} cảm thấy
+                  <Text style={{ fontWeight: "600" }}> {props.status}</Text>
+                </Text>
+              )}
+            </View>
             <View style={styles.Row}>
               <Text style={styles.Time}>{timeDisplay}</Text>
               <Entypo name="dot-single" size={12} color="#747476" />
@@ -146,6 +158,7 @@ const Post = (props) => {
                   numLike2: props.numLike2,
                   samePer: props.samePer,
                   authorId: props.authorId,
+                  status: props.status,
                 },
               });
             }}
@@ -256,6 +269,7 @@ const styles = StyleSheet.create({
   Text: {
     fontSize: 14,
     color: "#424040",
+    marginRight: 3,
   },
   BottomDivider: {
     width: "100%",

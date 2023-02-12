@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useNavigation } from "@react-navigation/native";
+import React, { useState, useEffect, useContext, useCallback } from "react";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import Hyperlink from "react-native-hyperlink";
 import {
   StyleSheet,
@@ -13,6 +13,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Platform,
+  Keyboard,
 } from "react-native";
 import Statusbar from "../../components/Statusbar";
 import { AntDesign, Feather, MaterialIcons, Entypo } from "@expo/vector-icons";
@@ -109,14 +110,20 @@ const TopBar = ({ enablePost, changeModalVisible, posting }) => {
   );
 };
 
-const User = ({ avatar }) => {
+const User = ({ avatar, status, icon }) => {
   const appContext = useContext(AppContext);
   return (
     <View style={styles.user}>
       <Avatar avatar={avatar} />
-      <Text style={{ marginLeft: 8, fontFamily: FONTS.medium }}>
+      <Text style={{ marginLeft: 8, fontFamily: FONTS.medium,marginRight:3 }}>
         {appContext.loginState.username}
       </Text>
+      {icon && (
+        <Text>
+          hiện đang{icon} cảm thấy
+          <Text style={{ fontWeight: "600" }}> {status}.</Text>
+        </Text>
+      )}
     </View>
   );
 };
@@ -135,7 +142,7 @@ const DefaultLink = () => {
   );
 };
 
-const LongEditText = ({ description, setDescription }) => {
+const LongEditText = ({ description, setDescription, setInputPosition }) => {
   return (
     <TextInput
       style={{ fontSize: 15, padding: 16, marginTop: 8 }}
@@ -146,6 +153,11 @@ const LongEditText = ({ description, setDescription }) => {
       }}
       value={description}
       placeholder="Bạn đang nghĩ gì?"
+      onFocus={() => setInputPosition(225)}
+      onBlur={() => {
+        Keyboard.dismiss();
+        setInputPosition(0);
+      }}
     />
   );
 };
@@ -158,8 +170,10 @@ const CloseBtn = ({ removeImage, uri }) => {
 };
 
 const FixedBottomBar = (props) => {
+  const navigation = useNavigation();
+  // console.log(props.inputPosition);
   return (
-    <View style={styles.BottomBar}>
+    <View style={[styles.BottomBar, { bottom: props.inputPosition }]}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <TouchableOpacity
           onPress={async () => {
@@ -199,7 +213,18 @@ const FixedBottomBar = (props) => {
         >
           <Feather name="image" size={24} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity style={{ marginLeft: 16 }}>
+        <TouchableOpacity
+          style={{ marginLeft: 16 }}
+          onPress={() => {
+            navigation.navigate({
+              name:'PersonalStatus',
+              params:{
+                icon:props.icon,
+                status:props.status
+              }
+            });
+          }}
+        >
           <MaterialIcons name="insert-emoticon" size={24} color="black" />
         </TouchableOpacity>
       </View>
@@ -208,28 +233,38 @@ const FixedBottomBar = (props) => {
 };
 
 const takeImageAsync = async () => {
-  let result = await ImagePicker.launchCameraAsync({
-    allowsEditing: false,
-  });
-  if (!result.canceled) {
-    const output = result.assets[0];
-    return output;
+  const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+  if (permissionResult.granted === false) {
+    alert("You've refused to allow this app to access your photos!");
+  } else {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: false,
+    });
+    if (!result.canceled) {
+      const output = result.assets[0];
+      return output;
+    }
+    return [];
   }
-  return [];
 };
-
 const pickImageAsync = async () => {
-  let result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    allowsMultipleSelection: true,
-    orderedSelection: true,
-  });
-  if (!result.canceled) {
-    // console.log(result.assets);
-    const output = result.assets;
-    return output;
+  const permissionResult =
+    await ImagePicker.requestMediaLibraryPermissionsAsync();
+  if (permissionResult.granted === false) {
+    alert("You've refused to allow this app to access your photos!");
+  } else {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: true,
+      orderedSelection: true,
+    });
+    if (!result.canceled) {
+      // console.log(result.assets);
+      const output = result.assets;
+      return output;
+    }
+    return [];
   }
-  return [];
 };
 
 const RenderImages = ({ images, removeImage }) => {
@@ -325,8 +360,7 @@ const RenderImages = ({ images, removeImage }) => {
       return;
   }
 };
-
-const Post = () => {
+const Post = ({ route }) => {
   const appContext = useContext(AppContext);
   const navigation = useNavigation();
   const [enablePost, setEnablePost] = useState(false);
@@ -334,7 +368,21 @@ const Post = () => {
   const [postErrModal, setPostErrModal] = useState(false);
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [inputPosition, setInputPosition] = useState(0);
   const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("");
+  const [icon, setIcon] = useState("");
+  useFocusEffect(
+    React.useCallback(() => {
+      if (route.params?.status) {
+        setStatus(route.params.status);
+        setIcon(route.params.icon);
+        let a;
+        route.params.status = a;
+      }
+    }, [route.params?.status])
+  );
+  
   const changeModalVisible = (bool) => {
     setEnableModal(bool);
   };
@@ -363,11 +411,11 @@ const Post = () => {
         name: filename,
         type: type,
       });
-      console.log(image);
+      // console.log(image);
     });
     setIsLoading(true);
     if (images.length) {
-      imagePost(description, formData, appContext.loginState.token)
+      imagePost(description, formData, appContext.loginState.token,status)
         .then((res) => {
           console.log(res.data.data);
           setIsLoading(false);
@@ -387,7 +435,7 @@ const Post = () => {
           }
         });
     } else
-      textPost(description, appContext.loginState.token)
+      textPost(description, appContext.loginState.token,status)
         .then((res) => {
           console.log(res.data.data);
           setIsLoading(false);
@@ -430,10 +478,15 @@ const Post = () => {
       />
       <ScrollView style={styles.container}>
         <View style={styles.postContainer}>
-          <User avatar={appContext.loginState.avatarURL} />
+          <User
+            avatar={appContext.loginState.avatarURL}
+            status={status}
+            icon={icon}
+          />
           <LongEditText
             description={description}
             setDescription={setDescription}
+            setInputPosition={setInputPosition}
           />
           <RenderImages images={images} removeImage={removeImage} />
         </View>
@@ -464,6 +517,9 @@ const Post = () => {
         imageNum={images.length}
         setPostErrModal={setPostErrModal}
         setIsLoading={setIsLoading}
+        inputPosition={inputPosition}
+        icon={icon}
+        status={status}
       />
     </>
   );
@@ -562,6 +618,7 @@ const styles = StyleSheet.create({
     paddingRight: 16,
     justifyContent: "space-between",
     backgroundColor: "#ffffff",
+    position: "absolute",
   },
   CloseBtn: {
     position: "absolute",

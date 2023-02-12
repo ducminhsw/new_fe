@@ -11,6 +11,7 @@ import Avatar from "./Avatar";
 import PostImage from "./PostImage";
 import CustomText from "./CustomText";
 import { postLike } from "../api";
+import { StatusToEmoji } from "../constants/emoji";
 import AppContext from "../context/AppContext";
 const PostContent = ({ description, images }) => {
   return (
@@ -39,7 +40,7 @@ export default SpecifyPost = (props) => {
     else setLikeDisplay(`Bạn và ${numLike} người khác`);
   };
   const navigation = useNavigation();
-  const appContext = useContext(AppContext)
+  const appContext = useContext(AppContext);
   return (
     <View style={styles.Container}>
       <View style={styles.Header}>
@@ -54,7 +55,15 @@ export default SpecifyPost = (props) => {
           </TouchableOpacity>
           <Avatar avatar={props.avatar} online={props.active} />
           <View style={{ paddingLeft: 8 }}>
-            <Text style={styles.Text}>{props.userName}</Text>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.Text}>{props.userName}</Text>
+              {props.status && (
+                <Text>
+                  hiện đang{StatusToEmoji[props.status]} cảm thấy
+                  <Text style={{ fontWeight: "600" }}> {props.status}.</Text>
+                </Text>
+              )}
+            </View>
             <View style={styles.Row}>
               <Text style={styles.Time}>{timeDisplay}</Text>
               <Entypo name="dot-single" size={12} color="#747476" />
@@ -203,6 +212,7 @@ const styles = StyleSheet.create({
   Text: {
     fontSize: 14,
     color: "#000000",
+    marginRight: 3,
   },
   BottomDivider: {
     width: "100%",
