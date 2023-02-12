@@ -392,7 +392,6 @@ const ProfileViewScreen = ({ route }) => {
                                         }
                                     }
                                 )
-                                // console.log(resList.data.data[0].id)
                                 const listConversation = resList.data.data;
                                 for(var i in listConversation){
                                     if(listConversation[i].partner.id == id){
@@ -406,7 +405,7 @@ const ProfileViewScreen = ({ route }) => {
                                         `${BaseURL}/it4788/chat/get_conversation`,
                                         {},
                                         {
-                                            params: {    // token: token login
+                                            params: {
                                                 token: appContext.loginState.token,
                                                 index: 0,
                                                 count: 50,

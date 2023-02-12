@@ -39,7 +39,6 @@ const HomeChat = () => {
         {},
         {
           params: {
-            // login token
             index: 0,
             count: 50,
             token: appContext.loginState.token,
@@ -47,7 +46,6 @@ const HomeChat = () => {
         }
       );
       setListData(res.data.data);
-      console.log(res.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -58,7 +56,7 @@ const HomeChat = () => {
   });
 
   return (
-    <>
+    <View style={styles.container}>
       <View style={styles.searchContainer}>
         <View style={styles.searchIconContainer}>
           <Ionicons
@@ -83,11 +81,9 @@ const HomeChat = () => {
                     {},
                     {
                       params: {
-                        // token: token login
                         token: appContext.loginState.token,
                         index: 0,
                         count: 50,
-                        // partner_id: item.partner.id
                         conversation_id: item.id,
                       },
                     }
@@ -126,7 +122,7 @@ const HomeChat = () => {
           );
         }}
       ></FlatList>
-    </>
+    </View>
   );
 };
 
@@ -136,7 +132,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 10,
-    backgroundColor: "white",
+    backgroundColor: "white"
   },
   containerItem: {
     flexDirection: "row",

@@ -170,7 +170,7 @@ const SignIn = () => {
 
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
             <Image
                 source={Logo}
                 style={[styles.logo, { height: height * 0.3 }]}

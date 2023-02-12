@@ -69,7 +69,7 @@ const ChatView = ({ route }) => {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <FlatList
                 style={{ flex: 10 }}
                 ref={messEndRef}
@@ -155,7 +155,7 @@ const ChatView = ({ route }) => {
                     </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </View>
     )
 }
 

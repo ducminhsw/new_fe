@@ -7,12 +7,12 @@ import { responsiveFontSize } from 'react-native-responsive-dimensions'
 import AppContext from '../context/AppContext'
 import { BaseURL } from '../ultis/Constants'
 
-export default function UserInfo({route}){
+export default function UserInfo({ route }) {
     const navigation = useNavigation();
     const appContext = useContext(AppContext)
 
     const username = route.params.name;
-    const birthday = new Date(route.params.birthday*1000).toLocaleDateString();
+    const birthday = new Date(route.params.birthday * 1000).toLocaleDateString();
     const userId = route.params.user_id;
     const description = route.params.description;
 
@@ -22,28 +22,30 @@ export default function UserInfo({route}){
             'Alert',
             'Bạn có chắc muốn xóa đoạn hội thoại này?',
             [
-                {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                {text: 'Yes', onPress: async () => {
-                    console.log(`Delete Conversation with ${username}`);
-                    try {
-                        const res = await axios.post(
-                            `${BaseURL}/it4788/chat/delete_conversation`,
-                            {},
-                            {
-                                params: {
-                                    token: appContext.loginState.token,
-                                    partner_id: userId
+                { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                {
+                    text: 'Yes', onPress: async () => {
+                        console.log(`Delete Conversation with ${username}`);
+                        try {
+                            const res = await axios.post(
+                                `${BaseURL}/it4788/chat/delete_conversation`,
+                                {},
+                                {
+                                    params: {
+                                        token: appContext.loginState.token,
+                                        partner_id: userId
+                                    }
                                 }
-                            }
-                        )
-                        console.log(res.data)
-                    } catch (error) {
-                        console.log(error);
+                            )
+                            console.log(res.data)
+                        } catch (error) {
+                            console.log(error);
+                        }
+                        navigation.navigate('HomeChat');
                     }
-                    navigation.navigate('HomeChat');
-                }},
+                },
             ],
-            {cancelable: true}
+            { cancelable: true }
         )
     }
 
@@ -52,31 +54,26 @@ export default function UserInfo({route}){
     }
 
     return (
-                <View style={styles.model}>
-                    
-                    <View style={styles.content}>
-                        {/* <View style={styles.topContainer}>
-                            <Zocial style={styles.icon} name="call" size={responsiveFontSize(3)} color="#006AFF" />
-                            <FontAwesome style={styles.icon} name="video-camera" size={responsiveFontSize(3)} color="#006AFF" />
-                        </View> */}
-                        <View style={styles.centerContainer}>
-                            <View style={styles.imageContainer}>
-                                <Image style={styles.image} source={{ uri: 'https://i.imgur.com/6oU7JoG.jpg' }} />
-                            </View>
-                            <Text style={styles.name}>{username}</Text>
-                            <Text style={styles.name}>{birthday}</Text>
-                            <Text style={styles.name}>{description}</Text>
-                        </View>
-                        <TouchableOpacity onPress={ deleteChat } style={styles.bottomBtn1}>
-                            <Text style={styles.btnText}>DELETE</Text>
-                            
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={ blockChat } style={styles.bottomBtn}>
-                            <Text style={styles.btnText}>BLOCk</Text>
-                        </TouchableOpacity>
+        <View style={styles.model}>
+
+            <View style={styles.content}>
+                <View style={styles.centerContainer}>
+                    <View style={styles.imageContainer}>
+                        <Image style={styles.image} source={{ uri: 'https://i.imgur.com/6oU7JoG.jpg' }} />
                     </View>
+                    <Text style={styles.name}>{username}</Text>
+                    <Text style={styles.name}>{birthday}</Text>
+                    <Text style={styles.name}>{description}</Text>
                 </View>
-            
+                <TouchableOpacity onPress={deleteChat} style={styles.bottomBtn1}>
+                    <Text style={styles.btnText}>DELETE</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={blockChat} style={styles.bottomBtn}>
+                    <Text style={styles.btnText}>BLOCk</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+
     )
 }
 
@@ -116,47 +113,47 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10
     },
     centerContainer: {
-        flex : 1,
-        justifyContent : 'center',
-        alignItems : 'center',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     bottomBtn: {
-        height : 60,
-        justifyContent : 'center',
-        alignItems : 'center',
-        backgroundColor : '#006AFF'
+        height: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#006AFF'
     },
     bottomBtn1: {
-        height : 60,
-        justifyContent : 'center',
-        alignItems : 'center',
-        backgroundColor : 'red'
+        height: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'red'
     },
     btnText: {
-        color : 'white',
-        fontSize : 18,
+        color: 'white',
+        fontSize: 18,
     },
     name: {
-        fontSize : 24
+        fontSize: 24
     },
     facebookTitle: {
-        fontSize : 13
+        fontSize: 13
     },
     caption: {
-        color : 'gray',
-        fontSize : 14
+        color: 'gray',
+        fontSize: 14
     },
-    close : {
-        width : 35,
-        height : 35,
-        backgroundColor : 'transparent',
-        flexDirection : 'column',
+    close: {
+        width: 35,
+        height: 35,
+        backgroundColor: 'transparent',
+        flexDirection: 'column',
         position: 'absolute',
-        top : 20,
-        left : 20,
-        color : 'white'
+        top: 20,
+        left: 20,
+        color: 'white'
     },
-    imageContainer : {
-        paddingBottom : 20
+    imageContainer: {
+        paddingBottom: 20
     }
 })

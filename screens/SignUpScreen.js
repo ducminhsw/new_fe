@@ -212,6 +212,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     header: {
+        marginTop: 60,
         fontSize: 25,
         fontWeight: 'bold',
         alignSelf: 'center',
