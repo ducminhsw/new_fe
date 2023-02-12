@@ -47,18 +47,21 @@ const PostDirect = ({ avatar }) => {
   return (
     <TouchableOpacity
       style={styles.Input}
-      onPress={() => navigation.navigate({ name: "Post" })}
-    >
+      onPress={() => navigation.navigate({ name: "Post" })} >
       <Text>Bạn đang nghĩ gì?</Text>
     </TouchableOpacity>
   );
 };
 const PersonalNewsFeed = React.memo(function (props) {
+  const navigation = useNavigation()
   const appContext = useContext(AppContext);
   return (
     <View style={styles.subContainer}>
       <View style={styles.Row}>
-        <Avatar avatar={appContext.loginState.avatarURL} online />
+        <TouchableOpacity
+        onPress={() => navigation.navigate("Profile")}>
+          <Avatar avatar={appContext.loginState.avatarURL} online />
+        </TouchableOpacity>
         <PostDirect />
       </View>
       <View style={styles.Divider}></View>
@@ -229,12 +232,8 @@ const Feed = ({ route }) => {
         <BottomMenu
           setModalVisible={setModalVisible}
           personal={personal}
-          // setDeleModalVisible={setDeleModalVisible}
         />
       )}
-      {/* {deleteModalVisible && (
-        <DeteleModal setDeleModalVisible={setDeleModalVisible} />
-      )}  */}
     </View>
   );
 };

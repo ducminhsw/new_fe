@@ -19,7 +19,7 @@ const EditViewScreen = ({route}) => {
     const user_profile = route.params
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+        <View style={{ flex: 1, backgroundColor: "white" }}>
             <KeyboardAvoidingView
                 behavior='padding'
                 style={{ flex: 1 }}>
@@ -70,7 +70,7 @@ const EditViewScreen = ({route}) => {
                     </TouchableWithoutFeedback>
                 </ScrollView>
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </View>
     )
 }
 

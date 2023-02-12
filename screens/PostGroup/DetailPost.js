@@ -39,8 +39,8 @@ const FixedBottomBar = ({ id, _addComment, setInputPosition }) => {
   };
   
   return (
-    <SafeAreaView style={styles.BottomBar}>
-      <Avatar small />
+    <View style={styles.BottomBar}>
+      {/* <Avatar small /> */}
       <View style={styles.subBottomBar}>
         <TextInput
           ref={textInputRef}
@@ -66,7 +66,7 @@ const FixedBottomBar = ({ id, _addComment, setInputPosition }) => {
           <MaterialIcons name="send" size={24} color="#3a86e9" />
         </TouchableOpacity>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 function FlatListHeader({ params, setModalVisible,numComment }) {
@@ -249,6 +249,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#eeeeee",
     justifyContent: "center",
     padding: 8,
-    marginLeft: 4,
+    marginHorizontal: 6,
+    marginRight: 10,
+    marginTop: 6
   },
 });

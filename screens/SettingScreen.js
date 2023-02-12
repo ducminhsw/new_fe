@@ -50,7 +50,7 @@ const SettingScreen = () => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+        <View style={{ flex: 1, backgroundColor: "white" }}>
             <ScrollView>
                 <TouchableOpacity
                     onPress={() => navigation.push("ChangePass")}
@@ -86,7 +86,7 @@ const SettingScreen = () => {
                     <Text style={{ fontFamily: FONTS.bold, fontSize: SIZES.medium }}>Đăng xuất</Text>
                 </TouchableOpacity>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     )
 }
 

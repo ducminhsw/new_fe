@@ -31,13 +31,12 @@ import {
   View,
   Text
 } from "react-native";
-import { SafeAreaView } from "react-navigation";
 import { BaseURL } from "./ultis/Constants";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Statusbar from "./components/Statusbar";
-import { HeaderShownContext } from "@react-navigation/elements";
+import { Header, HeaderShownContext } from "@react-navigation/elements";
 const Stack = createStackNavigator();
 export const NavigationContext = React.createContext();
 export default function App() {
@@ -78,20 +77,153 @@ export default function App() {
         <NavigationContext.Provider value={navigationRef}>
           <NavigationContainer ref={navigationRef}>
             <>
-              <Statusbar />
               <Stack.Navigator initialRouteName="SignIn" >
                 <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
                 <Stack.Screen name="Post" component={Post} options={{ headerShown: false }} />
                 <Stack.Screen name="DetailPost" component={DetailPost} options={{ headerShown: false }} />
                 <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />
                 <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
-                <Stack.Screen name="Profile" component={ProfileScreen} />
-                <Stack.Screen name="Edit" component={EditScreen} />
-                <Stack.Screen name="EditView" component={EditViewScreen} />
-                <Stack.Screen name="Setting" component={SettingScreen} />
-                <Stack.Screen name="ProfileView" component={ProfileViewScreen} />
-                <Stack.Screen name="FriendList" component={FriendListScreen} />
-                <Stack.Screen name="ChangePass" component={ChangePassScreen} />
+                <Stack.Screen name="Profile" component={ProfileScreen}
+                  options={({ navigation }) => ({
+                    title: appContext.loginState.username,
+                    headerMode: "screen",
+                    headerLeft: () => {
+                      return (
+                        <View style={styles.chatViewHeaderLeftContainer}>
+                          <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Ionicons
+                              name="md-arrow-back"
+                              size={responsiveFontSize(3)}
+                              color="#006AFF"
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    },
+                    headerLeftContainerStyle: {
+                      paddingHorizontal: 10,
+                    }
+                  })} />
+                <Stack.Screen name="Edit" component={EditScreen}
+                  options={({ navigation }) => ({
+                    headerMode: "screen",
+                    headerLeft: () => {
+                      return (
+                        <View style={styles.chatViewHeaderLeftContainer}>
+                          <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Ionicons
+                              name="md-arrow-back"
+                              size={responsiveFontSize(3)}
+                              color="#006AFF"
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    },
+                    headerLeftContainerStyle: {
+                      paddingHorizontal: 10,
+                    }
+                  })} />
+                <Stack.Screen name="EditView" component={EditViewScreen}
+                  options={({ navigation }) => ({
+                    headerMode: "screen",
+                    headerLeft: () => {
+                      return (
+                        <View style={styles.chatViewHeaderLeftContainer}>
+                          <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Ionicons
+                              name="md-arrow-back"
+                              size={responsiveFontSize(3)}
+                              color="#006AFF"
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    },
+                    headerLeftContainerStyle: {
+                      paddingHorizontal: 10,
+                    }
+                  })} />
+                <Stack.Screen name="Setting" component={SettingScreen}
+                  options={({ navigation }) => ({
+                    headerMode: "screen",
+                    headerLeft: () => {
+                      return (
+                        <View style={styles.chatViewHeaderLeftContainer}>
+                          <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Ionicons
+                              name="md-arrow-back"
+                              size={responsiveFontSize(3)}
+                              color="#006AFF"
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    },
+                    headerLeftContainerStyle: {
+                      paddingHorizontal: 10,
+                    }
+                  })} />
+                <Stack.Screen name="ProfileView" component={ProfileViewScreen}
+                  options={({ navigation }) => ({
+                    headerMode: "screen",
+                    headerLeft: () => {
+                      return (
+                        <View style={styles.chatViewHeaderLeftContainer}>
+                          <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Ionicons
+                              name="md-arrow-back"
+                              size={responsiveFontSize(3)}
+                              color="#006AFF"
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    },
+                    headerLeftContainerStyle: {
+                      paddingHorizontal: 10,
+                    }
+                  })} />
+                <Stack.Screen name="FriendList" component={FriendListScreen}
+                  options={({ navigation }) => ({
+                    headerMode: "screen",
+                    headerLeft: () => {
+                      return (
+                        <View style={styles.chatViewHeaderLeftContainer}>
+                          <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Ionicons
+                              name="md-arrow-back"
+                              size={responsiveFontSize(3)}
+                              color="#006AFF"
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    },
+                    headerLeftContainerStyle: {
+                      paddingHorizontal: 10,
+                    }
+                  })} />
+                <Stack.Screen name="ChangePass" component={ChangePassScreen}
+                  options={({ navigation }) => ({
+                    headerMode: "screen",
+                    headerLeft: () => {
+                      return (
+                        <View style={styles.chatViewHeaderLeftContainer}>
+                          <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Ionicons
+                              name="md-arrow-back"
+                              size={responsiveFontSize(3)}
+                              color="#006AFF"
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    },
+                    headerLeftContainerStyle: {
+                      paddingHorizontal: 10,
+                    }
+                  })} />
                 <Stack.Screen
                   options={({ navigation }) => ({
                     title: "Message",
@@ -106,14 +238,6 @@ export default function App() {
                               color="#006AFF"
                             />
                           </TouchableOpacity>
-                          <View style={{ padding: 10 }}>
-                            <Image
-                              style={styles.image}
-                              source={{
-                                uri: "https://firebasestorage.googleapis.com/v0/b/danentang-1edea.appspot.com/o/stock_avatar.jpg?alt=media&token=778bec4b-00bb-481d-bdd9-e2b5ac55aa99",
-                              }}
-                            />
-                          </View>
                         </View>
                       );
                     },

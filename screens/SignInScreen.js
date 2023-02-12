@@ -170,7 +170,7 @@ const SignIn = () => {
 
 
     return (
-        <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+        <View style={styles.container} edges={['top', 'left', 'right']}>
             <Image
                 source={Logo}
                 style={[styles.logo, { height: height * 0.3 }]}
@@ -214,7 +214,7 @@ const SignIn = () => {
                     type="SECONDARY"
                 />
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 

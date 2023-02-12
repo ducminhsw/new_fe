@@ -325,8 +325,7 @@ const ProfileViewScreen = ({ route }) => {
     }
 
     return (
-
-        <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+        <View style={{ flex: 1, backgroundColor: "white" }}>
             <ScrollView>
                 <View style={{
                     alignItems: "center"
@@ -595,7 +594,7 @@ const ProfileViewScreen = ({ route }) => {
                     <Separator />
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     )
 }
 
