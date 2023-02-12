@@ -293,7 +293,6 @@ const ProfileViewScreen = ({ route }) => {
         )
         const DATA = res.data.data.friends
         navigation.push("FriendList", DATA)
-
         return res;
     }
 
@@ -378,7 +377,6 @@ const ProfileViewScreen = ({ route }) => {
 
                         <TouchableOpacity
                             onPress={async () => {
-                                // get conversationId
                                 var conversationId='';
                                 const resList = await axios.post(
                                     `${BaseURL}/it4788/chat/get_list_conversation`,
@@ -398,7 +396,6 @@ const ProfileViewScreen = ({ route }) => {
                                         break;
                                     }
                                 }
-                                
                                 if(conversationId != '') {
                                     const res = await axios.post(
                                         `${BaseURL}/it4788/chat/get_conversation`,
@@ -407,7 +404,7 @@ const ProfileViewScreen = ({ route }) => {
                                             params: {
                                                 token: appContext.loginState.token,
                                                 index: 0,
-                                                count: 50,
+                                                count: 100,
                                                 conversation_id: conversationId
                                             }
                                         }
@@ -424,11 +421,9 @@ const ProfileViewScreen = ({ route }) => {
                                         username: username,
                                         conversation_id: room,
                                         avatar: avatar ? avatar : avatar_basic.uri,
-                                    });
+                                    })
                                     console.log(avatar_basic.uri)
-
                                 } else {
-                                    
                                     console.log('create conversation')
                                     const newKey = generateKey(5);
                                     const res = await axios.post(
@@ -442,9 +437,7 @@ const ProfileViewScreen = ({ route }) => {
                                             }
                                         }
                                     )
-
                                     console.log(res.data.data)
-
                                     MSG_LIST = [
                                         {
                                             message_id: generateKey(8),
@@ -454,16 +447,15 @@ const ProfileViewScreen = ({ route }) => {
                                             }
                                         }
                                     ]
-
-                                    // refreshFlatList(generateKey(5));
-
+                                    setRoom("" + newKey)
+                                    appContext.loginState.socket.emit("join_room", room)
                                     navigation.navigate('ChatView', {
                                         data: MSG_LIST,
                                         partner_id: id,
                                         username: username,
-                                        conversation_id: newKey,
+                                        conversation_id: room,
+                                        avatar: avatar ? avatar : avatar_basic.uri,
                                     })
-
                                 }
                             }}
                             style={{

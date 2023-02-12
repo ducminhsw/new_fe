@@ -256,54 +256,6 @@ export default function App() {
                   component={ChatView}
                   options={({ navigation, route }) => ({
                     title: null,
-                    headerRight: () => {
-                      const openUserInfo = async () => {
-                        console.log(route.params.partner_id);
-                        try {
-                          const res = await axios.post(
-                            `${BaseURL}/it4788/user/get_user_info`,
-                            {},
-                            {
-                              params: {
-                                token: appContext.loginState.token,
-                                user_id: route.params.partner_id,
-                              },
-                            }
-                          );
-                          console.log(res.data.data.username);
-                          navigation.navigate("UserInfo", {
-                            name: res.data.data.username,
-                            user_id: res.data.data.id,
-                            birthday: res.data.data.birthday,
-                            description: res.data.data.description,
-                          });
-                        } catch (error) {
-                          console.log(`error: ${error}`);
-                          Alert.alert(
-                            "Lỗi lấy thông tin",
-                            "Không thể lấy thông tin User",
-                            [
-                              {
-                                text: "OK",
-                                style: "cancel",
-                              },
-                            ]
-                          );
-                        }
-                      };
-                      return (
-                        <View style={styles.chatViewHeaderRightContainer}>
-                          <TouchableOpacity style={styles.info}>
-                            <FontAwesome5
-                              onPress={openUserInfo}
-                              name="info-circle"
-                              size={responsiveFontSize(3)}
-                              color="#006AFF"
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      );
-                    },
                     headerLeft: () => {
                       const openUserInfo = async () => {
                         console.log(route.params.partner_id);
@@ -318,13 +270,13 @@ export default function App() {
                               },
                             }
                           );
-                          console.log(res.data.data.username);
-                          navigation.navigate("UserInfo", {
-                            name: res.data.data.username,
-                            user_id: res.data.data.id,
-                            birthday: res.data.data.birthday,
-                            description: res.data.data.description,
-                          });
+                          const user_info = res.data.data
+                          console.log(user_info)
+                          if (user_info.id == appContext.loginState.user_id) {
+                            navigation.navigate("Profile")
+                          } else {
+                            navigation.navigate("ProfileView", { user_info })
+                          }
                         } catch (error) {
                           console.log(`error: ${error}`);
                           Alert.alert(
@@ -343,15 +295,12 @@ export default function App() {
                         <View style={styles.chatViewHeaderLeftContainer}>
                           <TouchableOpacity
                             onPress={() => {
-                              // appContext.loginState.socket.emit("disconnect")
                               navigation.goBack();
-                            }}
-                          >
+                            }} >
                             <Ionicons
                               name="md-arrow-back"
                               size={responsiveFontSize(3)}
-                              color="#006AFF"
-                            />
+                              color="#006AFF" />
                           </TouchableOpacity>
                           <View style={styles.chatViewProPicContainer}>
                             <Image
@@ -365,7 +314,6 @@ export default function App() {
                             <Text onPress={openUserInfo} style={styles.name}>
                               {route.params.username}
                             </Text>
-                            {/* <Text style={styles.lastOnlineText}>Active 12 hour ago</Text> */}
                           </View>
                         </View>
                       );

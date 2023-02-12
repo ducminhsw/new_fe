@@ -5,219 +5,152 @@ import { View, StyleSheet, Text, FlatList, TouchableOpacity, Image } from 'react
 import { ScrollView } from 'react-native-gesture-handler'
 import { responsiveFontSize, responsiveHeight } from "react-native-responsive-dimensions";
 import AppContext from "../context/AppContext";
-import { BaseURL } from "../ultis/Constants";
+import { avatar_basic, BaseURL } from "../ultis/Constants";
+import { assets, COLORS, FONTS, SIZES } from '../constants'
 
 const Users = () => {
-
     const navigation = useNavigation();
     const appContext = useContext(AppContext);
-    const [state, setState] = useState(null);
-
-    var MSG_LIST = [{}];
+    const [friends, setFriends] = useState(appContext.loginState.friend_list)
+    const [room, setRoom] = useState("")
+    let MSG_LIST = [{}]
 
     const generateKey = (numberOfCharacters) => {
-        return require('random-string')({length: numberOfCharacters});
+        return require('random-string')({ length: numberOfCharacters });
     }
 
-    const refreshFlatList = (activeKey) => {
-        setState((prevState) => {
-            return{
-                deletedRowKey: activeKey
-            };
-        });
+    useEffect(() => {
+        const getFriends = async () => {
+            const res = await axios.post(
+                `${BaseURL}/it4788/friend/get_user_friends`,
+                {},
+                {
+                    params: {
+                        token: appContext.loginState.token,
+                        index: 0,
+                        count: 10
+                    }
+                }
+            )
+            const friend_list = res.data.data.friends
+            setFriends(friend_list)
+            console.log(friends)
+        }
+        getFriends()
+    })
+
+    const getItemChat = async (item) => {
+        var conversationId = '';
+        const resList = await axios.post(
+            `${BaseURL}/it4788/chat/get_list_conversation`,
+            {},
+            {
+                params: {
+                    index: 0,
+                    count: 50,
+                    token: appContext.loginState.token
+                }
+            }
+        )
+        const listConversation = resList.data.data;
+        for (var i in listConversation) {
+            if (listConversation[i].partner.id == item.id) {
+                conversationId = listConversation[i].id;
+                break;
+            }
+        }
+        if (conversationId != '') {
+            const res = await axios.post(
+                `${BaseURL}/it4788/chat/get_conversation`,
+                {},
+                {
+                    params: {
+                        token: appContext.loginState.token,
+                        index: 0,
+                        count: 100,
+                        conversation_id: conversationId
+                    }
+                }
+            )
+            console.log('Get conversation with id: ' + res.data.data.conversationId);
+            console.log(res.data.data.conversationId)
+
+            MSG_LIST = res.data.data.conversation;
+            setRoom("" + res.data.data.conversationId)
+            appContext.loginState.socket.emit("join_room", room)
+            navigation.navigate('ChatView', {
+                data: MSG_LIST,
+                partner_id: item.id,
+                username: item.username,
+                conversation_id: room,
+                avatar: avatar ? avatar : avatar_basic.uri,
+            })
+            console.log(avatar_basic.uri)
+        } else {
+            console.log('create conversation')
+            const newKey = generateKey(5);
+            const res = await axios.post(
+                `${BaseURL}/it4788/chat/create_conversation`,
+                {},
+                {
+                    params: {
+                        conversationId: newKey,
+                        firstUser: appContext.loginState.user_id,   // My Id
+                        secondUser: id
+                    }
+                }
+            )
+            console.log(res.data.data)
+            MSG_LIST = [
+                {
+                    message_id: generateKey(8),
+                    message: 'Giờ đây 2 bạn đã có thể nhắn tin cho nhau',
+                    sender: {
+                        id: appContext.loginState.user_id,  // My ID
+                    }
+                }
+            ]
+            setRoom("" + newKey)
+            appContext.loginState.socket.emit("join_room", room)
+            navigation.navigate('ChatView', {
+                data: MSG_LIST,
+                partner_id: item.id,
+                username: item.username,
+                conversation_id: room,
+                avatar: avatar ? avatar : avatar_basic.uri,
+            })
+        }
     }
 
-    // const checkConversation = async (partnerId) => {
-    //     try {
-    //         const res = await axios.post(
-    //             `${BASEURL}/it4788/chat/get_conversation`,
-    //             {},
-    //             {
-    //                 params:{    // token: token login
-    //                     token: LOGIN_TOKEN,
-    //                     index: 0,
-    //                     count: 50,
-    //                     partner_id: partnerId
-    //                 }
-    //             }
-    //         )
-    //         console.log('get conversation');
-    //         // console.log(res.data.data.conversation)
-
-    //         MSG_LIST = res.data.data.conversation;
-    //         // console.log(MSG_LIST[0].message);
-            
-    //         navigation.navigate('ChatView', {
-    //             data: MSG_LIST,
-    //             partner_id: partnerId,
-    //             username: res.data.data.conversation[0].sender.username
-    //         });
-    //         return;
-            
-    //     } catch (error) {
-    //         const res = await axios.post(
-    //             `${BASEURL}/it4788/chat/create_conversation`,
-    //             {},
-    //             {
-    //                 params:{
-    //                     conversationId: generateKey(5),
-    //                     firstUser: '63d4a90b99927c523ca04f02',   // My Id
-    //                     secondUser: partnerId
-    //                 }
-    //             }
-    //         )
-
-    //         console.log(res.data.data)
-            
-
-    //         MSG_LIST = [
-    //             {
-    //                 message_id: generateKey(8),
-    //                     message: 'Giờ đây 2 bạn đã có thể nhắn tin cho nhau',
-    //                     sender: {
-    //                         id: '63d4a90b99927c523ca04f02',  // My ID
-    //                     }
-    //             }
-    //         ]
-            
-    //         navigation.navigate('ChatView', {
-    //             data: MSG_LIST,
-    //             partner_id: partnerId,
-    //             username: resInfo.data.data.username
-    //         })
-
-    //     }
-        
-        
-    // }
-
-    const DATA = [  // friend_data
-        {
-            id: '63d4a82abb4edf5b244219a5',
-            name: 'Hoàng',
-            avatar: 'https://i.imgur.com/w3Ln36b.jpg'
-        },
-        {
-            id: '63d4e4acb1fb9f28c0e14b3b',
-            name: 'Minh Hoang',
-            avatar: 'https://i.imgur.com/9qnDvZO.jpg'
-        },
-        {
-            id: '63d4a90b99927c523ca04f02',
-            name: 'Minh',
-            avatar: 'https://i.imgur.com/w3Ln36b.jpg'
-        },
-        {
-            id: '63d4f66cb1fb9f28c0e14b3d',
-            name: 'Văn Huy',
-            avatar: 'https://i.imgur.com/6oU7JoG.jpg'
-        },
-        
-    ]
+    const FriendItem = ({ item }) => {
+        console.log(item)
+        return (
+            <TouchableOpacity
+                onPress={() => getItemChat(item.id)}
+                style={{
+                    flexDirection: 'row',
+                    alignItems: "center",
+                    margin: 10,
+                    marginLeft: 20
+                }}>
+                <Image
+                    source={{ uri: (item.avatar) ? item.avatar : avatar_basic.uri }}
+                    style={{
+                        width: 60,
+                        height: 60,
+                        borderRadius: 100,
+                    }}
+                />
+                <Text style={{ marginLeft: 16, fontFamily: FONTS.medium }}>{item.username}</Text>
+            </TouchableOpacity>
+        )
+    }
 
     return (
         <View style={styles.container}>
-            {/* <ScrollView>
-                <ActiveUsers
-                    navigation={navigation}
-                    name="Le Minh Hoang"
-                    profile='https://i.imgur.com/w3Ln36b.jpg'
-                />
-                <ActiveUsers
-                    navigation={navigation}
-                    name="Hoang Minh"
-                    profile='https://i.imgur.com/6oU7JoG.jpg'
-                />
-                <ActiveUsers
-                    navigation={navigation}
-                    name="Le Minh"
-                    profile='https://i.imgur.com/9qnDvZO.jpg'
-                />
-            </ScrollView> */}
             <FlatList
-                data={DATA}
-                extraData={state}
-                keyExtractor={item => item.id}
-                renderItem={({item, index}) => {
-                    return <TouchableOpacity onPress={ async () => {
-                            // checkConversation(item.id);
-                            try {
-                                const res = await axios.post(
-                                    `${BaseURL}/it4788/chat/get_conversation`,
-                                    {},
-                                    {
-                                        params:{    // token: token login
-                                            token: appContext.loginState.token,
-                                            index: 0,
-                                            count: 50,
-                                            partner_id: item.id
-                                        }
-                                    }
-                                )
-                                console.log('get conversation');
-                                // console.log(res.data.data.conversation)
-                    
-                                MSG_LIST = res.data.data.conversation;
-                                // console.log(MSG_LIST[0].message);
-                                
-                                navigation.navigate('ChatView', {
-                                    data: MSG_LIST,
-                                    partner_id: item.id,
-                                    username: item.name,
-                                    conversation_id: ''
-                                });
-                                return;
-                                
-                            } catch (error) {
-                                console.log(`error: ${error}`)
-                                console.log('create conversation')
-                                const newKey = generateKey(5);
-                                const res = await axios.post(
-                                    `${BaseURL}/it4788/chat/create_conversation`,
-                                    {},
-                                    {
-                                        params:{
-                                            conversationId: newKey,
-                                            firstUser: appContext.loginState.user_id,   // My Id
-                                            secondUser: item.id
-                                        }
-                                    }
-                                )
-                    
-                                console.log(res.data.data)
-                                
-                    
-                                MSG_LIST = [
-                                    {
-                                        message_id: generateKey(8),
-                                            message: 'Giờ đây 2 bạn đã có thể nhắn tin cho nhau',
-                                            sender: {
-                                                id: appContext.loginState.user_id,  // My ID
-                                            }
-                                    }
-                                ]
-
-                                refreshFlatList(generateKey(5));
-                                
-                                navigation.navigate('ChatView', {
-                                    data: MSG_LIST,
-                                    partner_id: item.id,
-                                    username: item.name,
-                                    conversation_id: newKey
-                                })
-                    
-                            }
-                        }
-                    } activeOpacity={0.7} style={styles.container1}>
-                                <View style={styles.imageContainer}>
-                                    <Image style={styles.image} source={{ uri: item.avatar }} />
-                                    {/* <View style={styles.activeStatus} /> */}
-                                </View>
-                                <Text style={styles.name}>{item.name}</Text>
-                            </TouchableOpacity>
-                }}
-            >
-            </FlatList>
+                data={friends}
+                renderItem={({ item }) => <FriendItem item={item} />} />
         </View>
     )
 }
@@ -225,9 +158,9 @@ const Users = () => {
 export default Users
 
 const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        padding: 10
+    container: {
+        flex: 1,
+        backgroundColor: "white"
     },
     container1: {
         flexDirection: 'row',

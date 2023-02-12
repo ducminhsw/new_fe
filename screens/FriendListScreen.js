@@ -27,7 +27,6 @@ const FriendListScreen = ({ route }) => {
             }
         )
         const user_info = res.data.data
-        console.log(user_info)
         if (user_info.id == appContext.loginState.user_id) {
             navigation.navigate("Profile")
         } else {
@@ -44,7 +43,7 @@ const FriendListScreen = ({ route }) => {
     }
 
     const FriendItem = ({ item }) => {
-        console.log(item.id)
+        console.log(item)
         return (
             <TouchableOpacity
                 onPress={() => get_item_info(item.id)}

@@ -23,19 +23,17 @@ const ChatNavigator = () => {
             <Stack.Navigator>
                 <Stack.Screen
                     options={
-                        ({navigation}) => ({
+                        ({ navigation }) => ({
                             title: 'Message',
                             headerLeft: () => {
-                                return <Image style={styles.image} source={
-                                    {
+                                return <Image style={styles.image} source={{
                                         uri: 'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
-                                    }
-                                } />
+                                    }} />
                             },
-                            headerLeftContainerStyle:{
+                            headerLeftContainerStyle: {
                                 paddingHorizontal: 10
                             },
-                            headerRightContainerStyle:{
+                            headerRightContainerStyle: {
                                 paddingHorizontal: 10
                             }
                         })
@@ -47,11 +45,11 @@ const ChatNavigator = () => {
                     name="ChatView"
                     component={ChatView}
                     options={
-                        ({navigation, route}) => ({
+                        ({ navigation, route }) => ({
                             title: null,
                             headerRight: () => {
                                 const openUserInfo = async () => {
-                                    
+
                                     console.log(route.params.partner_id);
                                     try {
                                         const res = await axios.post(
@@ -65,14 +63,8 @@ const ChatNavigator = () => {
                                             }
                                         )
                                         console.log(res.data.data.username);
-                                        navigation.navigate('UserInfo', {
-                                            name: res.data.data.username,
-                                            user_id: res.data.data.id,
-                                            birthday: res.data.data.birthday,
-                                            description: res.data.data.description
-                                        })
-
-                            
+                                        const user_info = res.data.data
+                                        navigation.navigate("ProfileView", { user_info });
                                     } catch (error) {
                                         console.log(`error: ${error}`);
                                         Alert.alert(
@@ -89,12 +81,6 @@ const ChatNavigator = () => {
                                 }
                                 return (
                                     <View style={styles.chatViewHeaderRightContainer}>
-                                        {/* <TouchableOpacity style={styles.call}>
-                                            <Ionicons name="ios-call" size={responsiveFontSize(3)} color="#006AFF" />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.video}>
-                                            <FontAwesome name="video-camera" size={responsiveFontSize(3)} color="#006AFF" />
-                                        </TouchableOpacity> */}
                                         <TouchableOpacity style={styles.info}>
                                             <FontAwesome5 onPress={openUserInfo} name="info-circle" size={responsiveFontSize(3)} color="#006AFF" />
                                         </TouchableOpacity>
@@ -116,14 +102,8 @@ const ChatNavigator = () => {
                                             }
                                         )
                                         console.log(res.data.data.username);
-                                        navigation.navigate('UserInfo', {
-                                            name: res.data.data.username,
-                                            user_id: res.data.data.id,
-                                            birthday: res.data.data.birthday,
-                                            description: res.data.data.description
-                                        })
-
-                            
+                                        const user_info = res.data.data
+                                        navigation.navigate("ProfileView", { user_info });
                                     } catch (error) {
                                         console.log(`error: ${error}`);
                                         Alert.alert(
@@ -148,21 +128,16 @@ const ChatNavigator = () => {
                                         </View>
                                         <View>
                                             <Text onPress={openUserInfo} style={styles.name}>{route.params.username}</Text>
-                                            {/* <Text style={styles.lastOnlineText}>Active 12 hour ago</Text> */}
                                         </View>
 
                                     </View>
                                 )
                             },
-                            headerLeftContainerStyle:{
+                            headerLeftContainerStyle: {
                                 paddingHorizontal: 10
                             }
                         })
                     }
-                />
-                <Stack.Screen
-                    name="UserInfo"
-                    component={UserInfo}
                 />
             </Stack.Navigator>
         </NavigationContainer>
@@ -172,7 +147,7 @@ const ChatNavigator = () => {
 export default ChatNavigator
 
 const styles = StyleSheet.create({
-    image:{
+    image: {
         width: responsiveHeight(5),
         height: responsiveHeight(5),
         borderRadius: 200

@@ -7,7 +7,6 @@ import { responsiveFontSize, responsiveHeight } from 'react-native-responsive-di
 
 const HomeChatTabs = () => {
     const Tab = createBottomTabNavigator()
-
     return (
         <Tab.Navigator
             screenOptions={({route}) => ({
@@ -18,10 +17,10 @@ const HomeChatTabs = () => {
                         return <FontAwesome5 name="user-friends" color={color} size={responsiveFontSize(3)}/>
                     }
                 },
-                tabBarActiveTintColor: 'rgba(211,211,211,0.7)',
+                // tabBarActiveTintColor: 'rgba(211,211,211,0.7)',
                 tabBarActiveTintColor: '#325FFC',
                 tabBarStyle:{
-                    height: responsiveHeight(8)
+                    height: 80
                 },
                 tabBarItemStyle:{
                     padding: 8
@@ -29,24 +28,17 @@ const HomeChatTabs = () => {
                 tabBarLabelStyle:{
                     fontSize: responsiveFontSize(1.5)
                 }
-            })}
-            
-        >
+            })}>
             
             <Tab.Screen
                 name="Main"
                 options={{ title: 'Chats' }}
-                component={HomeChat}
-                
-            />
+                component={HomeChat}/>
             <Tab.Screen
                 name="Users"
-                component={Users}
-                
-            />
+                component={Users}/>
         </Tab.Navigator>
     )
-
 }
 
 export default HomeChatTabs
