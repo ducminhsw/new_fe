@@ -115,7 +115,7 @@ const SignUp = () => {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ flex: 1 }}>
@@ -196,7 +196,7 @@ const SignUp = () => {
                     />
                 </View>
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </View>
     )
 }
 
@@ -212,6 +212,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     header: {
+        marginTop: 60,
         fontSize: 25,
         fontWeight: 'bold',
         alignSelf: 'center',

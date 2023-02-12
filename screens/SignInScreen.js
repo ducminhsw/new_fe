@@ -89,8 +89,7 @@ const SignIn = () => {
                     type: 'SET_FRIEND_LIST_EMPTY'
                 })
             }
-
-            // get_list_block
+            
             try {
                 const res_block = await axios.post(
                     `${BaseURL}/it4788/friend/get_list_blocks`,
@@ -170,7 +169,7 @@ const SignIn = () => {
 
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container} edges={['top', 'left', 'right']}>
             <Image
                 source={Logo}
                 style={[styles.logo, { height: height * 0.3 }]}
@@ -214,7 +213,7 @@ const SignIn = () => {
                     type="SECONDARY"
                 />
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 

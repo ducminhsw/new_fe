@@ -21,7 +21,7 @@ const TopBar = ({ setEnable }) => {
   const navigation = useNavigation();
   return (
     <View style={styles.subContainer}>
-      <Text style={styles.appName}>Facebook</Text>
+      <Text style={styles.appName}>facebook</Text>
       <View style={styles.row}>
         <TouchableOpacity style={styles.btn}>
           <Feather name="search" size={23} color="black" />

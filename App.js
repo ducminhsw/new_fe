@@ -33,9 +33,9 @@ import {
 import { BaseURL } from "./ultis/Constants";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import axios from "axios";
-import io from "socket.io-client";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Statusbar from "./components/Statusbar";
+import { Header, HeaderShownContext } from "@react-navigation/elements";
 const Stack = createStackNavigator();
 export const NavigationContext = React.createContext();
 export default function App() {
@@ -71,12 +71,11 @@ export default function App() {
   const navigationRef = useRef();
   if (!loaded) return null;
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider style={{ flex: 1 }}>
       <AppContext.Provider value={appContext}>
         <NavigationContext.Provider value={navigationRef}>
           <NavigationContainer ref={navigationRef}>
             <>
-              <Statusbar />
               <Stack.Navigator initialRouteName="SignIn">
                 <Stack.Screen
                   name="Home"
@@ -101,26 +100,19 @@ export default function App() {
                 <Stack.Screen
                   name="SignIn"
                   component={SignIn}
-                  screenOptions={{ headerShown: false }}
+                  options={{ headerShown: false }}
                 />
-                <Stack.Screen name="SignUp" component={SignUp} />
+                <Stack.Screen
+                  name="SignUp"
+                  component={SignUp}
+                  options={{ headerShown: false }}
+                />
                 <Stack.Screen
                   name="Profile"
                   component={ProfileScreen}
-                  screenOptions={{ headerShown: true }}
-                />
-                <Stack.Screen name="Edit" component={EditScreen} />
-                <Stack.Screen name="EditView" component={EditViewScreen} />
-                <Stack.Screen name="Setting" component={SettingScreen} />
-                <Stack.Screen
-                  name="ProfileView"
-                  component={ProfileViewScreen}
-                />
-                <Stack.Screen name="FriendList" component={FriendListScreen} />
-                <Stack.Screen name="ChangePass" component={ChangePassScreen} />
-                <Stack.Screen
                   options={({ navigation }) => ({
-                    title: "Message",
+                    title: appContext.loginState.username,
+                    headerMode: "screen",
                     headerLeft: () => {
                       return (
                         <View style={styles.chatViewHeaderLeftContainer}>
@@ -131,14 +123,166 @@ export default function App() {
                               color="#006AFF"
                             />
                           </TouchableOpacity>
-                          <View style={{ padding: 10 }}>
-                            <Image
-                              style={styles.image}
-                              source={{
-                                uri: "https://firebasestorage.googleapis.com/v0/b/danentang-1edea.appspot.com/o/stock_avatar.jpg?alt=media&token=778bec4b-00bb-481d-bdd9-e2b5ac55aa99",
-                              }}
+                        </View>
+                      );
+                    },
+                    headerLeftContainerStyle: {
+                      paddingHorizontal: 10,
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="Edit"
+                  component={EditScreen}
+                  options={({ navigation }) => ({
+                    headerMode: "screen",
+                    headerLeft: () => {
+                      return (
+                        <View style={styles.chatViewHeaderLeftContainer}>
+                          <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Ionicons
+                              name="md-arrow-back"
+                              size={responsiveFontSize(3)}
+                              color="#006AFF"
                             />
-                          </View>
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    },
+                    headerLeftContainerStyle: {
+                      paddingHorizontal: 10,
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="EditView"
+                  component={EditViewScreen}
+                  options={({ navigation }) => ({
+                    headerMode: "screen",
+                    headerLeft: () => {
+                      return (
+                        <View style={styles.chatViewHeaderLeftContainer}>
+                          <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Ionicons
+                              name="md-arrow-back"
+                              size={responsiveFontSize(3)}
+                              color="#006AFF"
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    },
+                    headerLeftContainerStyle: {
+                      paddingHorizontal: 10,
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="Setting"
+                  component={SettingScreen}
+                  options={({ navigation }) => ({
+                    headerMode: "screen",
+                    headerLeft: () => {
+                      return (
+                        <View style={styles.chatViewHeaderLeftContainer}>
+                          <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Ionicons
+                              name="md-arrow-back"
+                              size={responsiveFontSize(3)}
+                              color="#006AFF"
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    },
+                    headerLeftContainerStyle: {
+                      paddingHorizontal: 10,
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="ProfileView"
+                  component={ProfileViewScreen}
+                  options={({ navigation }) => ({
+                    headerMode: "screen",
+                    headerLeft: () => {
+                      return (
+                        <View style={styles.chatViewHeaderLeftContainer}>
+                          <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Ionicons
+                              name="md-arrow-back"
+                              size={responsiveFontSize(3)}
+                              color="#006AFF"
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    },
+                    headerLeftContainerStyle: {
+                      paddingHorizontal: 10,
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="FriendList"
+                  component={FriendListScreen}
+                  options={({ navigation }) => ({
+                    headerMode: "screen",
+                    headerLeft: () => {
+                      return (
+                        <View style={styles.chatViewHeaderLeftContainer}>
+                          <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Ionicons
+                              name="md-arrow-back"
+                              size={responsiveFontSize(3)}
+                              color="#006AFF"
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    },
+                    headerLeftContainerStyle: {
+                      paddingHorizontal: 10,
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="ChangePass"
+                  component={ChangePassScreen}
+                  options={({ navigation }) => ({
+                    headerMode: "screen",
+                    headerLeft: () => {
+                      return (
+                        <View style={styles.chatViewHeaderLeftContainer}>
+                          <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Ionicons
+                              name="md-arrow-back"
+                              size={responsiveFontSize(3)}
+                              color="#006AFF"
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    },
+                    headerLeftContainerStyle: {
+                      paddingHorizontal: 10,
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  options={({ navigation }) => ({
+                    title: "Message",
+                    headerMode: "screen",
+                    headerLeft: () => {
+                      return (
+                        <View style={styles.chatViewHeaderLeftContainer}>
+                          <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Ionicons
+                              name="md-arrow-back"
+                              size={responsiveFontSize(3)}
+                              color="#006AFF"
+                            />
+                          </TouchableOpacity>
                         </View>
                       );
                     },
@@ -157,54 +301,6 @@ export default function App() {
                   component={ChatView}
                   options={({ navigation, route }) => ({
                     title: null,
-                    headerRight: () => {
-                      const openUserInfo = async () => {
-                        console.log(route.params.partner_id);
-                        try {
-                          const res = await axios.post(
-                            `${BaseURL}/it4788/user/get_user_info`,
-                            {},
-                            {
-                              params: {
-                                token: appContext.loginState.token,
-                                user_id: route.params.partner_id,
-                              },
-                            }
-                          );
-                          console.log(res.data.data.username);
-                          navigation.navigate("UserInfo", {
-                            name: res.data.data.username,
-                            user_id: res.data.data.id,
-                            birthday: res.data.data.birthday,
-                            description: res.data.data.description,
-                          });
-                        } catch (error) {
-                          console.log(`error: ${error}`);
-                          Alert.alert(
-                            "Lỗi lấy thông tin",
-                            "Không thể lấy thông tin User",
-                            [
-                              {
-                                text: "OK",
-                                style: "cancel",
-                              },
-                            ]
-                          );
-                        }
-                      };
-                      return (
-                        <View style={styles.chatViewHeaderRightContainer}>
-                          <TouchableOpacity style={styles.info}>
-                            <FontAwesome5
-                              onPress={openUserInfo}
-                              name="info-circle"
-                              size={responsiveFontSize(3)}
-                              color="#006AFF"
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      );
-                    },
                     headerLeft: () => {
                       const openUserInfo = async () => {
                         console.log(route.params.partner_id);
@@ -219,13 +315,13 @@ export default function App() {
                               },
                             }
                           );
-                          console.log(res.data.data.username);
-                          navigation.navigate("UserInfo", {
-                            name: res.data.data.username,
-                            user_id: res.data.data.id,
-                            birthday: res.data.data.birthday,
-                            description: res.data.data.description,
-                          });
+                          const user_info = res.data.data;
+                          console.log(user_info);
+                          if (user_info.id == appContext.loginState.user_id) {
+                            navigation.navigate("Profile");
+                          } else {
+                            navigation.navigate("ProfileView", { user_info });
+                          }
                         } catch (error) {
                           console.log(`error: ${error}`);
                           Alert.alert(
@@ -244,7 +340,6 @@ export default function App() {
                         <View style={styles.chatViewHeaderLeftContainer}>
                           <TouchableOpacity
                             onPress={() => {
-                              // appContext.loginState.socket.emit("disconnect")
                               navigation.goBack();
                             }}
                           >
@@ -266,7 +361,6 @@ export default function App() {
                             <Text onPress={openUserInfo} style={styles.name}>
                               {route.params.username}
                             </Text>
-                            {/* <Text style={styles.lastOnlineText}>Active 12 hour ago</Text> */}
                           </View>
                         </View>
                       );

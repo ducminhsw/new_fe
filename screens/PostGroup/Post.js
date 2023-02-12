@@ -98,13 +98,7 @@ const TopBar = ({ enablePost, changeModalVisible, posting }) => {
         }}
       >
         <Text
-          style={{
-            color: enablePost ? "#ffffff" : "rgba(0, 0, 0, 0.38)",
-            fontSize: 17,
-          }}
-        >
-          Đăng
-        </Text>
+          style={{ color: enablePost ? "#ffffff" : "rgba(0, 0, 0, 0.38)", fontSize: 17, }}> Đăng </Text>
       </TouchableOpacity>
     </View>
   );

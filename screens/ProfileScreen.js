@@ -84,7 +84,7 @@ const ProfileScreen = () => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+        <View style={{ flex: 1, backgroundColor: "white" }}>
             <ScrollView>
                 <View style={{
                     alignItems: "center"
@@ -229,7 +229,7 @@ const ProfileScreen = () => {
                     <Separator />
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     )
 }
 
