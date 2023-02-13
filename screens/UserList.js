@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { View, StyleSheet, Text, FlatList, TouchableOpacity, Image } from 'react-native'
@@ -9,8 +9,9 @@ import { avatar_basic, BaseURL } from "../ultis/Constants";
 import { assets, COLORS, FONTS, SIZES } from '../constants'
 
 const Users = () => {
-    const navigation = useNavigation();
-    const appContext = useContext(AppContext);
+    const navigation = useNavigation()
+    const isFocus = useIsFocused()
+    const appContext = useContext(AppContext)
     const [friends, setFriends] = useState(appContext.loginState.friend_list)
     const [room, setRoom] = useState("")
     let MSG_LIST = [{}]
@@ -37,7 +38,7 @@ const Users = () => {
             console.log(friends)
         }
         getFriends()
-    })
+    }, [navigation, isFocus])
 
     const getItemChat = async (item) => {
         var conversationId = '';

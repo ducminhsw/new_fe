@@ -17,7 +17,7 @@ import {
   responsiveWidth,
 } from "react-native-responsive-dimensions";
 import Chat from "../components/Chat";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
 import AppContext from "../context/AppContext";
 import axios from "axios";
 import { BaseURL } from "../ultis/Constants";
@@ -25,6 +25,7 @@ import { BaseURL } from "../ultis/Constants";
 const HomeChat = () => {
   const navigation = useNavigation();
   const appContext = useContext(AppContext);
+  const isFocus = useIsFocused()
 
   const [listData, setListData] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
@@ -45,6 +46,7 @@ const HomeChat = () => {
         }
       );
       setListData(res.data.data);
+      console.log("Call api chat getter")
     } catch (error) {
       console.log(error);
     }
@@ -52,7 +54,7 @@ const HomeChat = () => {
 
   useEffect(() => {
     getListConversation();
-  });
+  }, [isFocus]);
 
   return (
     <View style={styles.container}>
@@ -87,10 +89,7 @@ const HomeChat = () => {
                       },
                     }
                   );
-                  console.log("get conversation");
-
                   MSG_LIST = res.data.data.conversation;
-
                   navigation.navigate("ChatView", {
                     data: MSG_LIST,
                     partner_id: item.partner.id,

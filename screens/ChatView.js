@@ -17,7 +17,6 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { useNavigation } from '@react-navigation/native'
 import { responsiveFontSize, responsiveHeight } from "react-native-responsive-dimensions";
 import axios from 'axios'
-import io from "socket.io-client"
 import AppContext from "../context/AppContext";
 import { avatar_basic, BaseURL } from "../ultis/Constants";
 

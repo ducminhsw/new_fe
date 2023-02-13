@@ -4,84 +4,149 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Image,
+  FlatList,
+  Alert
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import Avatar from "../../components/Avatar";
-const TopBar = () => {
+import { avatar_basic, BaseURL } from "../../ultis/Constants";
+import { FONTS, SIZES } from "../../constants";
+import { useEffect, useContext, useState } from "react";
+import axios from "axios";
+import AppContext from "../../context/AppContext";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+
+var checkRequest = 0
+
+const requestCheck = async (token, id, is_accept) => {
+  try {
+    const res = await axios.post(
+      `${BaseURL}/it4788/friend/set_accept_friend`,
+      {},
+      {
+        params: {
+          token: token,
+          user_id: id,
+          is_accept: is_accept
+        }
+      }
+    )
+    console.log(res)
+  } catch (error) {
+    Alert.alert(
+      "Không thể thao tác",
+      "Kiểm tra lại thiết bị và kết nối của bạn, hiện tại không thể xứ lý yêu cầu",
+      {
+        text: "OK",
+        style: 'cancel'
+      }
+
+    )
+    console.log(error)
+  }
+}
+
+const FriendRequestItem = ({ item }) => {
+  const appContext = useContext(AppContext)
   return (
-    <View style={[styles.Row, { justifyContent: "space-between" }]}>
-      <Text style={styles.label}>Bạn bè</Text>
-      <View>
-        <TouchableOpacity style={styles.btn}>
-          <Feather name="search" size={23} color="black" />
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-};
-const BottomBar = () => {
-  return (
-    <View style={styles.Row}>
-      <TouchableOpacity style={styles.btn1}>
-        <Text style={styles.textStyle}>Tất cả bạn bè</Text>
+    <View style={{ flex: 1, flexDirection: "row", padding: 10, paddingStart: 5, marginBottom: 10 }}>
+      <TouchableOpacity style={{ flex: 1, marginStart: 10 }}>
+        <Image
+          source={{ uri: item.avatar ? item.avatar : avatar_basic.uri }}
+          style={{ height: 60, width: 60, borderRadius: 200 }} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.btn1}>
-        <Text style={styles.textStyle}>Danh sách chặn</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-const UserChoice = () => {
-  return (
-    <View>
-      <View style={[styles.Row]}>
-        <Text style={styles.textStyle}>Tạ Thành</Text>
-        <Text style={{ marginLeft: 100 }}>1 ngày</Text>
-      </View>
-      <View style={[styles.Row]}>
-        <TouchableOpacity>
-          <Text style={[styles.btnAccept]}>Chấp nhận</Text>
+      <View style={{ flexDirection: "column", flex: 4 }}>
+        <TouchableOpacity style={{ flex: 1, marginStart: 10 }}>
+          <Text style={{ fontFamily: FONTS.medium, fontSize: 16 }}>{item.username}</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={[styles.btnDeny]}>Xoá</Text>
-        </TouchableOpacity>
+        <View style={{ flexDirection: "row", flex: 2 }}>
+          <TouchableOpacity style={{
+            flex: 1, alignItems: "center", backgroundColor: "#2374e1", justifyContent: "center",
+            marginHorizontal: 10, borderRadius: 8
+          }}
+            onPress={() => {
+              requestCheck(appContext.loginState.token, item.id, 1)
+              checkRequest++
+            }}>
+            <Text style={{ fontSize: 14, color: "white" }}>Chấp nhận</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{
+            flex: 1, alignItems: "center", backgroundColor: "#dddddd", justifyContent: "center",
+            marginHorizontal: 10, borderRadius: 8
+          }}
+            onPress={() => {
+              requestCheck(appContext.loginState.token, 1)
+              checkRequest--
+            }}>
+            <Text style={{ fontSize: 14 }}>Từ chối</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
 };
-const FriendRequest = () => {
+const FriendRequestList = (data) => {
+  console.log(data)
   return (
-    <View style={styles.Row}>
-      <Avatar source={require("../../assets/user1.jpg")} big />
-      <UserChoice />
-    </View>
-  );
-};
-const FriendRequestList = () => {
-  return (
-    <View>
+    <View style={{ flex: 1 }}>
       <View style={styles.Row}>
         <Text style={styles.label}>Lời mời kết bạn</Text>
       </View>
-      <ScrollView>
-        <FriendRequest />
-      </ScrollView>
+      <FlatList
+        data={data.data}
+        renderItem={({ item }) => <FriendRequestItem item={item} />}>
+      </FlatList>
     </View>
   );
 };
 const Friend = () => {
+  const appContext = useContext(AppContext)
+  const navigation = useNavigation()
+  const isFocus = useIsFocused()
+  const [data, setData] = useState([])
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      const getRequest = async () => {
+        try {
+          const res = await axios.post(
+            `${BaseURL}/it4788/friend/get_requested_friends`,
+            {},
+            {
+              params: {
+                token: appContext.loginState.token,
+                index: 0,
+                count: 50
+              }
+            }
+          )
+          console.log("this is calling get request " + res.data.data)
+          setData(res.data.data.request)
+        } catch (error) {
+          setData([])
+        }
+      }
+      getRequest()
+    })
+    return unsubscribe
+  }, [navigation, isFocus, checkRequest])
+  if (JSON.stringify(data) == JSON.stringify([])) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", backgroundColor: "white" }}>
+        <Text style={{ fontFamily: FONTS.regular, fontSize: 14, color: "#cccccc", alignSelf: "center", margin: 40 }}>No friend to show</Text>
+      </View>
+    )
+  }
   return (
     <View style={styles.container}>
-      <TopBar />
-      <BottomBar />
       <View style={styles.Divider} />
-      <FriendRequestList />
+      <FriendRequestList data={data} />
     </View>
   );
 };
 export default Friend;
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: "#ffffff",
   },
   Row: {
@@ -99,14 +164,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f2f5",
   },
   label: {
-    fontSize: 25,
+    fontSize: 22,
     fontWeight: "bold",
     letterSpacing: -0.3,
   },
   textStyle: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 18,
     letterSpacing: -0.3,
+    fontFamily: FONTS.medium
   },
   btn: {
     width: 40,
@@ -127,28 +192,25 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   btnAccept: {
-    borderRadius: 21,
-    backgroundColor: "blue",
+    flex: 1,
+    borderRadius: 8,
+    backgroundColor: "#2e87ff",
     alignItems: "center",
     justifyContent: "center",
-    paddingLeft: 16,
-    paddingRight: 16,
-    paddingTop: 5,
-    paddingBottom: 5,
-    fontSize: 15,
-    color: "#ffffff",
+    paddingLeft: 24,
+    paddingRight: 24,
+    paddingTop: 8,
+    paddingBottom: 8,
   },
   btnDeny: {
-    borderRadius: 21,
-    backgroundColor: "black",
+    flex: 1,
+    borderRadius: 8,
+    backgroundColor: "#dddddd",
     alignItems: "center",
     justifyContent: "center",
-    paddingLeft: 16,
-    paddingRight: 16,
-    paddingTop: 5,
-    paddingBottom: 5,
-    fontSize: 15,
-    color: "#ffffff",
-    marginLeft: 75,
+    paddingLeft: 24,
+    paddingRight: 24,
+    paddingTop: 8,
+    paddingBottom: 8,
   },
 });
