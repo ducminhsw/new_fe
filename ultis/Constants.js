@@ -15,7 +15,7 @@ export const appColor = {
   };
 
 // server:
-export const BaseURL = "https://cd9a-2405-4803-feb0-2c80-106a-b6f-8204-58e5.ap.ngrok.io"
+export const BaseURL = "https://4967-2405-4803-feb0-2c80-106a-b6f-8204-58e5.ap.ngrok.io"
 
 // image:
 export const avatar_basic = {

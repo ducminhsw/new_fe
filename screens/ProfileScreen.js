@@ -145,7 +145,7 @@ const ProfileScreen = () => {
                 <Separator />
 
                 <View>
-                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: "space-between", alignItems: "center" }}>
+                    {/* <View style={{ flex: 1, flexDirection: 'row', justifyContent: "space-between", alignItems: "center" }}>
                         <View style={{
                             width: 100,
                             height: 36,
@@ -165,9 +165,8 @@ const ProfileScreen = () => {
                         }}>
                             <Text style={{ fontFamily: FONTS.regular, fontSize: SIZES.medium, alignSelf: "center", color: "#BBBBBB" }}>Xem thông tin giới thiệu {'>'}</Text>
                         </TouchableOpacity>
-
-                    </View>
-                    <Separator />
+                    </View> */}
+                    {/* <Separator /> */}
                     <View>
                         <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: "space-between" }}>
                             <View style={{

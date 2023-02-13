@@ -62,23 +62,23 @@ const FriendRequestItem = ({ item }) => {
         <View style={{ flexDirection: "row", flex: 2 }}>
           <TouchableOpacity style={{
             flex: 1, alignItems: "center", backgroundColor: "#2374e1", justifyContent: "center",
-            marginHorizontal: 10, borderRadius: 8
+            marginHorizontal: 10, borderRadius: 8, margin: 10
           }}
             onPress={() => {
               requestCheck(appContext.loginState.token, item.id, 1)
               checkRequest++
             }}>
-            <Text style={{ fontSize: 14, color: "white" }}>Chấp nhận</Text>
+            <Text style={{ fontSize: 15, color: "white", fontFamily: FONTS.medium, color: "white" }}>Chấp nhận</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{
             flex: 1, alignItems: "center", backgroundColor: "#dddddd", justifyContent: "center",
-            marginHorizontal: 10, borderRadius: 8
+            marginHorizontal: 10, borderRadius: 8, margin: 10
           }}
             onPress={() => {
               requestCheck(appContext.loginState.token, 1)
               checkRequest--
             }}>
-            <Text style={{ fontSize: 14 }}>Từ chối</Text>
+            <Text style={{ fontSize: 15, color: "white", fontFamily: FONTS.medium }}>Từ chối</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -119,7 +119,7 @@ const Friend = () => {
               }
             }
           )
-          console.log("this is calling get request " + res.data.data)
+          console.log("This is calling get request " + res.data.data)
           setData(res.data.data.request)
         } catch (error) {
           setData([])
@@ -128,17 +128,22 @@ const Friend = () => {
       getRequest()
     })
     return unsubscribe
-  }, [navigation, isFocus, checkRequest])
+  }, [navigation, checkRequest])
   if (JSON.stringify(data) == JSON.stringify([])) {
     return (
       <View style={{ flex: 1, alignItems: "center", backgroundColor: "white" }}>
-        <Text style={{ fontFamily: FONTS.regular, fontSize: 14, color: "#cccccc", alignSelf: "center", margin: 40 }}>No friend to show</Text>
+        <Text style={{
+          fontFamily: FONTS.regular,
+          fontSize: 14,
+          color: "#cccccc",
+          alignSelf: "center",
+          margin: 40
+        }}>Không có yêu cầu kết bạn</Text>
       </View>
     )
   }
   return (
     <View style={styles.container}>
-      <View style={styles.Divider} />
       <FriendRequestList data={data} />
     </View>
   );

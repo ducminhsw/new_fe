@@ -6,37 +6,125 @@ import {
   Text,
   View,
   TouchableOpacity,
+  FlatList,
+  Image,
+  Alert
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import Avatar from "../../components/Avatar";
+import { useContext, useState, useEffect } from "react";
+import { FONTS, SIZES } from "../../constants";
+import { BaseURL, avatar_basic } from "../../ultis/Constants";
+
+import AppContext from "../../context/AppContext";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import axios from "axios";
 const TopBar = () => {
   return (
     <View style={[styles.Row, { justifyContent: "space-between" }]}>
-      <Text style={styles.label}>Thông báo</Text>
-      <View>
-        <TouchableOpacity style={styles.btn}>
-          <Feather name="search" size={23} color="black" />
+      <Text style={styles.label}>Danh sách chặn</Text>
+    </View>
+  );
+}
+
+const SuggestRequestItem = ({ item }) => {
+  const appContext = useContext(AppContext)
+  return (
+    <View style={{ flex: 1, flexDirection: "row", padding: 10, paddingStart: 5, marginBottom: 10 }}>
+      <TouchableOpacity style={{ flex: 1, marginStart: 10 }}>
+        <Image
+          source={{ uri: item.avatar ? item.avatar : avatar_basic.uri }}
+          style={{ height: 60, width: 60, borderRadius: 200 }} />
+      </TouchableOpacity>
+      <View style={{ flexDirection: "column", flex: 4 }}>
+        <TouchableOpacity style={{ flex: 1, marginStart: 10 }}>
+          <Text style={{ fontFamily: FONTS.medium, fontSize: 16 }}>{item.username}</Text>
         </TouchableOpacity>
+        <View style={{ flexDirection: "row", flex: 2 }}>
+          <TouchableOpacity style={{
+            alignItems: "center", backgroundColor: "#2374e1", justifyContent: "center",
+            marginHorizontal: 10, borderRadius: 8, height: 34, width: 160, margin: 10
+          }}>
+            <Text style={{ fontSize: 15, color: "white", fontFamily: FONTS.medium }}>Kết bạn</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
 };
-const PostNotification = () => {};
-const Notification = () => {
+
+const FriendRequestList = (data) => {
+  console.log(data.data)
   return (
-    <ScrollView style={styles.container}>
-      <TopBar />
-      <View style={styles.Divider} />
-      <TouchableOpacity style={styles.Row}>
-        <Avatar source={require("../../assets/user1.jpg")} big />
-      </TouchableOpacity>
-    </ScrollView>
+    <View style={{ flex: 1 }}>
+      <View style={styles.Row}>
+        <Text style={styles.label}>Những người bạn có thể biết</Text>
+      </View>
+      <FlatList
+        data={data.data}
+        renderItem={({ item }) => <SuggestRequestItem item={item} />}>
+      </FlatList>
+    </View>
+  );
+};
+const Notification = () => {
+  const appContext = useContext(AppContext)
+  const navigation = useNavigation()
+  const isFocus = useIsFocused()
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      const getRequest = async () => {
+        try {
+          console.log("Calling api")
+          const res = await axios.post(
+            `${BaseURL}/it4788/friend/get_list_suggested_friends`,
+            {},
+            {
+              params: {
+                token: appContext.loginState.token,
+                index: 0,
+                count: 50
+              }
+            }
+          )
+          console.log("This is calling get request " + res.data.data)
+          setData(res.data.data.list_users)
+        } catch (error) {
+          console.log(`error ${error}`)
+          setData([])
+        }
+      }
+      getRequest()
+    })
+    return unsubscribe
+  }, [navigation])
+  if (JSON.stringify(data) == JSON.stringify([])) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", backgroundColor: "white" }}>
+        <Text style={{
+          fontFamily: FONTS.regular,
+          fontSize: 14,
+          color: "#cccccc",
+          alignSelf: "center",
+          margin: 40
+        }}>Không có người dùng gợi ý</Text>
+      </View>
+    )
+  }
+
+  return (
+    <View style={styles.container}>
+      <FriendRequestList style={{ flex: 1 }} data={data} />
+    </View>
   );
 };
 export default Notification;
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#ffffff",
+    flex: 1,
+    backgroundColor: "white",
   },
   Row: {
     width: "100%",
@@ -51,9 +139,10 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 5,
     backgroundColor: "#f0f2f5",
+    backgroundColor: "black"
   },
   label: {
-    fontSize: 25,
+    fontSize: 22,
     fontWeight: "bold",
     letterSpacing: -0.3,
   },

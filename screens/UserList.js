@@ -86,7 +86,6 @@ const Users = () => {
                 conversation_id: room,
                 avatar: item.avatar ? item.avatar : avatar_basic.uri,
             })
-            console.log(avatar_basic.uri)
         } else {
             console.log('create conversation')
             const newKey = generateKey(5);
@@ -97,7 +96,7 @@ const Users = () => {
                     params: {
                         conversationId: newKey,
                         firstUser: appContext.loginState.user_id,   // My Id
-                        secondUser: id
+                        secondUser: item.id
                     }
                 }
             )

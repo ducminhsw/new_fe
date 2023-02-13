@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts } from "expo-font";
-import React, { useReducer, useRef } from "react";
+import React, { useReducer, useRef, useState } from "react";
 import { reducer } from "./context/AppReducer";
 import AppContext from "./context/AppContext";
 import Home from "./screens/HomeGroup";
@@ -30,7 +30,7 @@ import {
   View,
   Text,
 } from "react-native";
-import { BaseURL } from "./ultis/Constants";
+import { avatar_basic, BaseURL } from "./ultis/Constants";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -57,6 +57,7 @@ export default function App() {
     socket: null,
   };
   const [loginState, dispatch] = useReducer(reducer, initLoginState);
+  const [messImg, setMessImg] = useState(null)
   const appContext = {
     loginState,
     dispatch,
@@ -317,6 +318,7 @@ export default function App() {
                           );
                           const user_info = res.data.data;
                           console.log(user_info);
+                          setMessImg(user_info.avatar)
                           if (user_info.id == appContext.loginState.user_id) {
                             navigation.navigate("Profile");
                           } else {
@@ -353,12 +355,12 @@ export default function App() {
                             <Image
                               style={styles.profilePic}
                               source={{
-                                uri: "https://cdn2.downdetector.com/static/uploads/logo/fb-messenger.png",
+                                uri: messImg ? messImg : avatar_basic.uri,
                               }}
                             />
                           </View>
                           <View>
-                            <Text onPress={openUserInfo} style={styles.name}>
+                            <Text onPress={openUserInfo}>
                               {route.params.username}
                             </Text>
                           </View>
@@ -397,13 +399,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    marginStart: 5
   },
   name: {
     fontSize: responsiveFontSize(2),
     fontWeight: "bold",
   },
   chatViewProPicContainer: {
-    padding: 10,
   },
   chatViewHeaderRightContainer: {
     flexDirection: "row",
