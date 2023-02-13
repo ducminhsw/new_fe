@@ -127,6 +127,7 @@ const Feed = ({ route }) => {
         authorId={item.author.id}
         setModalVisible={setModalVisible}
         setPersonal={setPersonal}
+        status={item.state}
       />
     );
   };

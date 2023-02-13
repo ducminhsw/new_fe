@@ -5,6 +5,7 @@ import React, { useReducer, useRef } from "react";
 import { reducer } from "./context/AppReducer";
 import AppContext from "./context/AppContext";
 import Home from "./screens/HomeGroup";
+import { Post, DetailPost, PersonalStatus } from "./screens/PostGroup";
 import ProfileScreen from "./screens/ProfileScreen";
 import EditScreen from "./screens/EditScreen";
 import EditViewScreen from "./screens/EditViewScreen";
@@ -15,10 +16,8 @@ import ChangePassScreen from "./screens/ChangePassScreen";
 import SignIn from "./screens/SignInScreen";
 import SignUp from "./screens/SignUpScreen";
 import HomeChatTabs from "./navigations/HomeChatTabs";
-
 import ChatView from "./screens/ChatView";
 import UserInfo from "./screens/UserInfo";
-import { Post, DetailPost } from "./screens/PostGroup";
 import {
   responsiveFontSize,
   responsiveHeight,
@@ -29,7 +28,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Text
+  Text,
 } from "react-native";
 import { BaseURL } from "./ultis/Constants";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
@@ -77,13 +76,40 @@ export default function App() {
         <NavigationContext.Provider value={navigationRef}>
           <NavigationContainer ref={navigationRef}>
             <>
-              <Stack.Navigator initialRouteName="SignIn" >
-                <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
-                <Stack.Screen name="Post" component={Post} options={{ headerShown: false }} />
-                <Stack.Screen name="DetailPost" component={DetailPost} options={{ headerShown: false }} />
-                <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />
-                <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
-                <Stack.Screen name="Profile" component={ProfileScreen}
+              <Stack.Navigator initialRouteName="SignIn">
+                <Stack.Screen
+                  name="Home"
+                  component={Home}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Post"
+                  component={Post}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="DetailPost"
+                  component={DetailPost}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="PersonalStatus"
+                  component={PersonalStatus}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="SignIn"
+                  component={SignIn}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="SignUp"
+                  component={SignUp}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Profile"
+                  component={ProfileScreen}
                   options={({ navigation }) => ({
                     title: appContext.loginState.username,
                     headerMode: "screen",
@@ -102,9 +128,12 @@ export default function App() {
                     },
                     headerLeftContainerStyle: {
                       paddingHorizontal: 10,
-                    }
-                  })} />
-                <Stack.Screen name="Edit" component={EditScreen}
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="Edit"
+                  component={EditScreen}
                   options={({ navigation }) => ({
                     headerMode: "screen",
                     headerLeft: () => {
@@ -122,9 +151,12 @@ export default function App() {
                     },
                     headerLeftContainerStyle: {
                       paddingHorizontal: 10,
-                    }
-                  })} />
-                <Stack.Screen name="EditView" component={EditViewScreen}
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="EditView"
+                  component={EditViewScreen}
                   options={({ navigation }) => ({
                     headerMode: "screen",
                     headerLeft: () => {
@@ -142,9 +174,12 @@ export default function App() {
                     },
                     headerLeftContainerStyle: {
                       paddingHorizontal: 10,
-                    }
-                  })} />
-                <Stack.Screen name="Setting" component={SettingScreen}
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="Setting"
+                  component={SettingScreen}
                   options={({ navigation }) => ({
                     headerMode: "screen",
                     headerLeft: () => {
@@ -162,9 +197,12 @@ export default function App() {
                     },
                     headerLeftContainerStyle: {
                       paddingHorizontal: 10,
-                    }
-                  })} />
-                <Stack.Screen name="ProfileView" component={ProfileViewScreen}
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="ProfileView"
+                  component={ProfileViewScreen}
                   options={({ navigation }) => ({
                     headerMode: "screen",
                     headerLeft: () => {
@@ -182,9 +220,12 @@ export default function App() {
                     },
                     headerLeftContainerStyle: {
                       paddingHorizontal: 10,
-                    }
-                  })} />
-                <Stack.Screen name="FriendList" component={FriendListScreen}
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="FriendList"
+                  component={FriendListScreen}
                   options={({ navigation }) => ({
                     headerMode: "screen",
                     headerLeft: () => {
@@ -202,9 +243,12 @@ export default function App() {
                     },
                     headerLeftContainerStyle: {
                       paddingHorizontal: 10,
-                    }
-                  })} />
-                <Stack.Screen name="ChangePass" component={ChangePassScreen}
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="ChangePass"
+                  component={ChangePassScreen}
                   options={({ navigation }) => ({
                     headerMode: "screen",
                     headerLeft: () => {
@@ -222,8 +266,9 @@ export default function App() {
                     },
                     headerLeftContainerStyle: {
                       paddingHorizontal: 10,
-                    }
-                  })} />
+                    },
+                  })}
+                />
                 <Stack.Screen
                   options={({ navigation }) => ({
                     title: "Message",
@@ -270,12 +315,12 @@ export default function App() {
                               },
                             }
                           );
-                          const user_info = res.data.data
-                          console.log(user_info)
+                          const user_info = res.data.data;
+                          console.log(user_info);
                           if (user_info.id == appContext.loginState.user_id) {
-                            navigation.navigate("Profile")
+                            navigation.navigate("Profile");
                           } else {
-                            navigation.navigate("ProfileView", { user_info })
+                            navigation.navigate("ProfileView", { user_info });
                           }
                         } catch (error) {
                           console.log(`error: ${error}`);
@@ -296,11 +341,13 @@ export default function App() {
                           <TouchableOpacity
                             onPress={() => {
                               navigation.goBack();
-                            }} >
+                            }}
+                          >
                             <Ionicons
                               name="md-arrow-back"
                               size={responsiveFontSize(3)}
-                              color="#006AFF" />
+                              color="#006AFF"
+                            />
                           </TouchableOpacity>
                           <View style={styles.chatViewProPicContainer}>
                             <Image

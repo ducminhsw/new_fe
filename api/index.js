@@ -20,7 +20,7 @@ const postLike = async (id, token) => {
     },
   });
 };
-const imagePost = async (description, formData, token) => {
+const imagePost = async (description, formData, token,status) => {
   return axios({
     method: "post",
     url: "/it4788/post/add_post",
@@ -31,11 +31,12 @@ const imagePost = async (description, formData, token) => {
     params: {
       described: description,
       token: token,
+      status:status
     },
     data: formData,
   });
 };
-const textPost = async (description, token) => {
+const textPost = async (description, token,status) => {
   return axios({
     method: "post",
     url: "/it4788/post/add_post",
@@ -43,6 +44,7 @@ const textPost = async (description, token) => {
     params: {
       described: description,
       token: token,
+      status:status
     },
   });
 };
@@ -66,7 +68,7 @@ const getListPosts = async (index, count, last_id, token) => {
       token: token,
       index: index,
       count: count,
-      // last_id: index ? last_id : null,
+      last_id: index ? last_id : null,
     },
   });
 };
