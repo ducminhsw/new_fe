@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
   },
   TopBar: {
+    marginTop:30,
     height: 60,
     padding: 8,
     flexDirection: "row",
