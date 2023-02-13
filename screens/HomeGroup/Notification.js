@@ -12,23 +12,49 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import Avatar from "../../components/Avatar";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useCallback } from "react";
 import { FONTS, SIZES } from "../../constants";
 import { BaseURL, avatar_basic } from "../../ultis/Constants";
 
 import AppContext from "../../context/AppContext";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import axios from "axios";
-const TopBar = () => {
-  return (
-    <View style={[styles.Row, { justifyContent: "space-between" }]}>
-      <Text style={styles.label}>Danh sách chặn</Text>
-    </View>
-  );
-}
 
 const SuggestRequestItem = ({ item }) => {
   const appContext = useContext(AppContext)
+  // const onRefresh = useCallback(() => {
+  //   setRefreshing(true);
+  //   props.reload()
+  //   wait(1000).then(() => setRefreshing(false));
+  // }, []);
+  const sentFriendRequest = async (id) => {
+    console.log(id)
+    try {
+      const res = await axios.post(
+        `${BaseURL}/it4788/friend/set_request_friend`,
+        {},
+        {
+          params: {
+            token: appContext.loginState.token,
+            user_id: id
+          }
+        }
+      )
+      onRefresh()
+      console.log(res.data)
+    } catch (error) {
+      console.log(error)
+      Alert.alert(
+        "Không thể thao tác",
+        "Kiểm tra lại thiết bị và kết nối của bạn, hiện tại không thể xứ lý yêu cầu",
+        {
+          text: "OK",
+          style: 'cancel'
+        }
+      )
+      console.log("sentFriendRequest " + error)
+    }
+  }
   return (
     <View style={{ flex: 1, flexDirection: "row", padding: 10, paddingStart: 5, marginBottom: 10 }}>
       <TouchableOpacity style={{ flex: 1, marginStart: 10 }}>
@@ -44,7 +70,8 @@ const SuggestRequestItem = ({ item }) => {
           <TouchableOpacity style={{
             alignItems: "center", backgroundColor: "#2374e1", justifyContent: "center",
             marginHorizontal: 10, borderRadius: 8, height: 34, width: 160, margin: 10
-          }}>
+          }}
+            onPress={() => { sentFriendRequest(item.user_id) }}>
             <Text style={{ fontSize: 15, color: "white", fontFamily: FONTS.medium }}>Kết bạn</Text>
           </TouchableOpacity>
         </View>
@@ -54,7 +81,6 @@ const SuggestRequestItem = ({ item }) => {
 };
 
 const FriendRequestList = (data) => {
-  console.log(data.data)
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.Row}>
@@ -89,17 +115,16 @@ const Notification = () => {
               }
             }
           )
-          console.log("This is calling get request " + res.data.data)
           setData(res.data.data.list_users)
         } catch (error) {
-          console.log(`error ${error}`)
+          console.log(error)
           setData([])
         }
       }
       getRequest()
     })
     return unsubscribe
-  }, [navigation])
+  }, [navigation, isFocus])
   if (JSON.stringify(data) == JSON.stringify([])) {
     return (
       <View style={{ flex: 1, alignItems: "center", backgroundColor: "white" }}>

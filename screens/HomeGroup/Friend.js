@@ -8,15 +8,12 @@ import {
   FlatList,
   Alert
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
 import { avatar_basic, BaseURL } from "../../ultis/Constants";
 import { FONTS, SIZES } from "../../constants";
 import { useEffect, useContext, useState } from "react";
 import axios from "axios";
 import AppContext from "../../context/AppContext";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-
-var checkRequest = 0
 
 const requestCheck = async (token, id, is_accept) => {
   try {
@@ -40,7 +37,6 @@ const requestCheck = async (token, id, is_accept) => {
         text: "OK",
         style: 'cancel'
       }
-
     )
     console.log(error)
   }
@@ -62,23 +58,21 @@ const FriendRequestItem = ({ item }) => {
         <View style={{ flexDirection: "row", flex: 2 }}>
           <TouchableOpacity style={{
             flex: 1, alignItems: "center", backgroundColor: "#2374e1", justifyContent: "center",
-            marginHorizontal: 10, borderRadius: 8, margin: 10
+            marginHorizontal: 10, borderRadius: 8, margin: 10, height: 34, width: 160
           }}
             onPress={() => {
               requestCheck(appContext.loginState.token, item.id, 1)
-              checkRequest++
             }}>
             <Text style={{ fontSize: 15, color: "white", fontFamily: FONTS.medium, color: "white" }}>Chấp nhận</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{
             flex: 1, alignItems: "center", backgroundColor: "#dddddd", justifyContent: "center",
-            marginHorizontal: 10, borderRadius: 8, margin: 10
+            marginHorizontal: 10, borderRadius: 8, margin: 10, height: 34, width: 160
           }}
             onPress={() => {
-              requestCheck(appContext.loginState.token, 1)
-              checkRequest--
+              requestCheck(appContext.loginState.token, item.id, 0)
             }}>
-            <Text style={{ fontSize: 15, color: "white", fontFamily: FONTS.medium }}>Từ chối</Text>
+            <Text style={{ fontSize: 15, color: "black", fontFamily: FONTS.medium }}>Từ chối</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -86,7 +80,6 @@ const FriendRequestItem = ({ item }) => {
   );
 };
 const FriendRequestList = (data) => {
-  console.log(data)
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.Row}>
@@ -104,6 +97,7 @@ const Friend = () => {
   const navigation = useNavigation()
   const isFocus = useIsFocused()
   const [data, setData] = useState([])
+  const [check, setCheck] = useState(0)
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       const getRequest = async () => {
@@ -119,7 +113,6 @@ const Friend = () => {
               }
             }
           )
-          console.log("This is calling get request " + res.data.data)
           setData(res.data.data.request)
         } catch (error) {
           setData([])
@@ -128,7 +121,7 @@ const Friend = () => {
       getRequest()
     })
     return unsubscribe
-  }, [navigation, checkRequest])
+  }, [navigation, isFocus, check])
   if (JSON.stringify(data) == JSON.stringify([])) {
     return (
       <View style={{ flex: 1, alignItems: "center", backgroundColor: "white" }}>
