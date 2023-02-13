@@ -5,7 +5,7 @@ import React, {
   createContext,
   useContext,
 } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView } from "react-native";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
@@ -28,10 +28,7 @@ const TopBar = ({ setEnable }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => {
-            navigation.navigate("HomeChat");
-          }}
-        >
+          onPress={() => { navigation.navigate("HomeChat") }}>
           <MaterialCommunityIcons name="facebook-messenger" size={23} />
         </TouchableOpacity>
       </View>
@@ -97,22 +94,22 @@ export default Home = () => {
   //   name === "Setting"
   // );
   return (
-    <>
-      <View style={styles.container}>
-        {/* {enable && <TopBar />} */}
+    <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
+        {/* <Statusbar /> */}
         <TopBar />
         <HomeNavigator />
-      </View>
-    </>
+      </SafeAreaView>
+    </View>
   );
 };
 export { Feed, Friend, Notification, Setting };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "white"
   },
   subContainer: {
-    paddingTop: 16,
     width: "100%",
     flexWrap: "wrap",
     alignItems: "center",

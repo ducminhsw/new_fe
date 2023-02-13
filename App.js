@@ -71,7 +71,7 @@ export default function App() {
   const navigationRef = useRef();
   if (!loaded) return null;
   return (
-    <SafeAreaProvider style={{ flex: 1 }}>
+    <SafeAreaProvider>
       <AppContext.Provider value={appContext}>
         <NavigationContext.Provider value={navigationRef}>
           <NavigationContainer ref={navigationRef}>
