@@ -8,15 +8,6 @@ import CustomText from "./CustomText";
 import { postLike } from "../api";
 import { StatusToEmoji } from "../constants/emoji";
 import AppContext from "../context/AppContext";
-const PostContent = ({ description, images }) => {
-  // console.log(description);
-  return (
-    <View style={styles.postContainer}>
-      <CustomText text={description} />
-      <PostImage images={images} />
-    </View>
-  );
-};
 const Post = (props) => {
   const appContext = useContext(AppContext);
   const [likeDisplay, setLikeDisplay] = useState(props.numLike);
@@ -100,7 +91,34 @@ const Post = (props) => {
           <Entypo name="dots-three-horizontal" size={15} color="#222121" />
         </TouchableOpacity>
       </View>
-      <PostContent description={props.description} images={props.images} />
+      <View style={styles.postContainer}>
+        <CustomText text={props.description} />
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate({
+              name: "ImagePost",
+              params: {
+                id: props.id,
+                avatar: props.avatar,
+                userName: props.userName,
+                timeCreated: props.timeCreated,
+                description: props.description,
+                numLike: likeDisplay,
+                numComment: props.numComment,
+                images: props.images,
+                is_liked: props.is_liked,
+                self_liked: props.self_liked,
+                numLike2: props.numLike2,
+                samePer: props.samePer,
+                authorId: props.authorId,
+                status: props.status,
+              },
+            });
+          }}
+        >
+          <PostImage images={props.images} />
+        </TouchableOpacity>
+      </View>
       <View style={styles.Footer}>
         <View style={styles.FooterCount}>
           <View style={styles.Row}>

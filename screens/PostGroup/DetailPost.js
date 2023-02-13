@@ -21,6 +21,7 @@ import LoadingComment from "../../components/LoadingComment";
 import DeleteModal from "../../components/DeleteModal";
 import AppContext from "../../context/AppContext";
 import { TextUtility } from "../../ultis/TextUtility";
+import Statusbar from "../../components/Statusbar";
 const COMMENTS_PER_LOAD = 8;
 
 const FixedBottomBar = ({ id, _addComment, setInputPosition }) => {
@@ -43,7 +44,9 @@ const FixedBottomBar = ({ id, _addComment, setInputPosition }) => {
           multiline={true}
           placeholder="Viết bình luận..."
           style={{ paddingLeft: 8 }}
-          onChangeText={(text) => setSendComment(TextUtility.replaceStringWithIcon(text))}
+          onChangeText={(text) =>
+            setSendComment(TextUtility.replaceStringWithIcon(text))
+          }
           onFocus={() => setInputPosition(225)}
           onBlur={() => {
             Keyboard.dismiss();
@@ -85,7 +88,7 @@ function FlatListHeader({ params, setModalVisible, numComment }) {
         samePer={params.samePer}
         authorId={params.authorId}
         setModalVisible={setModalVisible}
-        status= {params.status}
+        status={params.status}
       />
       <View style={styles.Separator} />
       <View style={{ padding: 8 }}>
@@ -149,75 +152,78 @@ export default DetailPost = ({ route }) => {
     getData();
   }, [index]);
   return (
-    <View style={styles.Container}>
-      <View style={styles.CommentContainer}>
-        <FlatList
-          ref={flatListRef}
-          data={data}
-          renderItem={renderComment}
-          keyExtractor={(item) => item.id}
-          onEndReached={() => {
-            setIndex(index + COMMENTS_PER_LOAD);
+    <>
+      <Statusbar />
+      <View style={styles.Container}>
+        <View style={styles.CommentContainer}>
+          <FlatList
+            ref={flatListRef}
+            data={data}
+            renderItem={renderComment}
+            keyExtractor={(item) => item.id}
+            onEndReached={() => {
+              setIndex(index + COMMENTS_PER_LOAD);
+            }}
+            onEndReachedThreshold={0}
+            extraData={index}
+            ListEmptyComponent={
+              numComment != "0" ? (
+                <LoadingComment />
+              ) : (
+                <View
+                  style={{
+                    height: 200,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text>Bài viết này hiện chưa có bình luận nào</Text>
+                </View>
+              )
+            }
+            ListFooterComponent={
+              <View style={{ width: "100%", height: 100 }}></View>
+            }
+            ListHeaderComponent={
+              <FlatListHeader
+                params={params}
+                setModalVisible={setModalVisible}
+                numComment={numComment}
+              />
+            }
+          />
+          {isLoading && (
+            <View>
+              <ActivityIndicator size="small" color="#0000ff" />
+            </View>
+          )}
+        </View>
+        <View
+          style={{
+            position: "absolute",
+            bottom: inputPosition,
+            width: "100%",
+            backgroundColor: "white",
           }}
-          onEndReachedThreshold={0}
-          extraData={index}
-          ListEmptyComponent={
-            numComment != "0" ? (
-              <LoadingComment />
-            ) : (
-              <View
-                style={{
-                  height: 200,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text>Bài viết này hiện chưa có bình luận nào</Text>
-              </View>
-            )
-          }
-          ListFooterComponent={
-            <View style={{ width: "100%", height: 100 }}></View>
-          }
-          ListHeaderComponent={
-            <FlatListHeader
-              params={params}
-              setModalVisible={setModalVisible}
-              numComment={numComment}
-            />
-          }
-        />
-        {isLoading && (
-          <View>
-            <ActivityIndicator size="small" color="#0000ff" />
-          </View>
+        >
+          <FixedBottomBar
+            id={params.id}
+            _addComment={_addComment}
+            setInputPosition={setInputPosition}
+          />
+        </View>
+        {isModalVisible && (
+          <BottomMenu
+            setModalVisible={setModalVisible}
+            personal={personal}
+            setDeleModalVisible={setDeleModalVisible}
+          />
+        )}
+        {deleteModalVisible && (
+          <DeleteModal setDeleModalVisible={setDeleModalVisible} />
         )}
       </View>
-      <View
-        style={{
-          position: "absolute",
-          bottom: inputPosition,
-          width: "100%",
-          backgroundColor: "white",
-        }}
-      >
-        <FixedBottomBar
-          id={params.id}
-          _addComment={_addComment}
-          setInputPosition={setInputPosition}
-        />
-      </View>
-      {isModalVisible && (
-        <BottomMenu
-          setModalVisible={setModalVisible}
-          personal={personal}
-          setDeleModalVisible={setDeleModalVisible}
-        />
-      )}
-      {deleteModalVisible && (
-        <DeleteModal setDeleModalVisible={setDeleModalVisible} />
-      )}
-    </View>
+    </>
   );
 };
 
@@ -252,6 +258,6 @@ const styles = StyleSheet.create({
     padding: 8,
     marginHorizontal: 6,
     marginRight: 10,
-    marginTop: 6
+    marginTop: 6,
   },
 });

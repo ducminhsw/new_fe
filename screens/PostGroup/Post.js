@@ -233,6 +233,7 @@ const takeImageAsync = async () => {
   } else {
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: false,
+      quality:1
     });
     if (!result.canceled) {
       const output = result.assets[0];
@@ -251,6 +252,7 @@ const pickImageAsync = async () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       orderedSelection: true,
+      quality:1
     });
     if (!result.canceled) {
       // console.log(result.assets);
@@ -451,7 +453,7 @@ const Post = ({ route }) => {
   };
   return (
     <>
-      <Statusbar backgroundColor="#eeeeee" />
+      {/* <Statusbar backgroundColor="#eeeeee" /> */}
       {isLoading && (
         <View style={{ backgroundColor: "transparent" }}>
           <Text
@@ -526,6 +528,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
   },
   topBarContainer: {
+    marginTop:20,
     backgroundColor: "#eeeeee",
     borderBottomColor: "solid #000000",
     width: "100%",

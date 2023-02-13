@@ -5,7 +5,12 @@ import React, { useReducer, useRef, useState } from "react";
 import { reducer } from "./context/AppReducer";
 import AppContext from "./context/AppContext";
 import Home from "./screens/HomeGroup";
-import { Post, DetailPost, PersonalStatus } from "./screens/PostGroup";
+import {
+  Post,
+  DetailPost,
+  PersonalStatus,
+  ImagePost,
+} from "./screens/PostGroup";
 import ProfileScreen from "./screens/ProfileScreen";
 import EditScreen from "./screens/EditScreen";
 import EditViewScreen from "./screens/EditViewScreen";
@@ -96,6 +101,11 @@ export default function App() {
                 <Stack.Screen
                   name="PersonalStatus"
                   component={PersonalStatus}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="ImagePost"
+                  component={ImagePost}
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
