@@ -114,6 +114,10 @@ const Setting = () => {
           )
           setData(res.data.data)
           console.log(res.data.data)
+          appContext.dispatch({
+            type: 'SET_BLOCKED_LIST',
+            block_list: res.data.data
+          })
         } catch (error) {
           console.log(error)
           setData([])

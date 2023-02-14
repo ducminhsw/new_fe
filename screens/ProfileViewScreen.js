@@ -1,5 +1,5 @@
 import { Text, View, SafeAreaView, Image, TouchableOpacity, ScrollView, FlatList, Alert } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import React, { useContext, useState, useEffect } from 'react'
 
@@ -8,9 +8,11 @@ import AppContext from '../context/AppContext'
 import { assets, COLORS, FONTS, SIZES } from '../constants'
 import Separator from '../components/Separator'
 import { avatar_basic, BaseURL, coverImage_basic } from '../ultis/Constants'
+import { firebase } from '@react-native-firebase/storage'
 
 const ProfileViewScreen = ({ route }) => {
     const appContext = useContext(AppContext)
+    const isFocus = useIsFocused()
     appContext.loginState.socket.on("connect", () => {
         console.log("this is socket id ");
     });
@@ -23,6 +25,21 @@ const ProfileViewScreen = ({ route }) => {
     const [friend, setFriend] = useState(is_friend)
     const [state, setState] = useState(null);
     const [room, setRoom] = useState("")
+
+    useEffect(() => {
+        const is_block = () => {
+            if (JSON.stringify(appContext.loginState.block_list) == JSON.stringify([])) {
+                console.log("Not blocked yet")
+                setBlock(0)
+            } else {
+                console.log("Blocked")
+                let blockArr = appContext.loginState.block_list
+                let index = blockArr.findIndex(e => e.id.equals(id))
+                if (index >= 0) setBlock(1)
+            }
+        }
+        is_block()
+    }, [navigation, isFocus])
 
     const sentFriendRequest = async () => {
         try {
@@ -137,7 +154,18 @@ const ProfileViewScreen = ({ route }) => {
     }
 
     const make_friend_choice = () => {
-        if (friendState == "Bạn bè") {
+        if (friendState == "Bị Chặn") {
+            Alert.alert(
+                "Lỗi",
+                `Để thao tác bạn cần bỏ chặn ${username}`,
+                [
+                    {
+                        text: "OK",
+                        style: 'cancel'
+                    }
+                ]
+            )
+        } else if (friendState == "Bạn bè") {
             Alert.alert(
                 "Hủy kết bạn",
                 `Bạn muốn hủy kết bạn với ${username}`,
@@ -246,7 +274,9 @@ const ProfileViewScreen = ({ route }) => {
         else if (friend == '0') setFriendState("Kết bạn")
         else if (friend == '1') setFriendState("Hủy lời mời")
         else if (friend == '2') setFriendState("Từ chối")
-    }, [friend])
+
+        if (block == 1) setFriendState("Bị Chặn")
+    }, [friend, block])
 
     const blockUser = async () => {
         const res = await axios.post(
@@ -354,6 +384,19 @@ const ProfileViewScreen = ({ route }) => {
 
                         <TouchableOpacity
                             onPress={async () => {
+                                if (block == 1) {
+                                    Alert.alert(
+                                        "Lỗi",
+                                        `Để nhắn tin bạn cần bỏ chặn ${username}`,
+                                        [
+                                            {
+                                                text: "OK",
+                                                style: 'cancel'
+                                            }
+                                        ]
+                                    )
+                                    return
+                                }
                                 var conversationId='';
                                 const resList = await axios.post(
                                     `${BaseURL}/it4788/chat/get_list_conversation`,
