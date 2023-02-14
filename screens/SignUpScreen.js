@@ -17,6 +17,7 @@ const SignUp = () => {
     const [password, setPassword] = useState('');
     const [passwordRe, setPasswordRe] = useState('');
     const [secure, setSecure] = useState(true);
+    const [secureRe, setSecureRe] = useState(true);
     const [selectedDate, setSelectedDate] = useState('');
 
     const axios = require('axios').default
@@ -156,10 +157,10 @@ const SignUp = () => {
                             placeholder="Nhập lại mật khẩu"
                             value={passwordRe}
                             setValue={setPasswordRe}
-                            secureTextEntry
+                            secureTextEntry={secureRe}
                         />
-                        <TouchableOpacity style={styles.visible} onPress={() => setSecure(!secure)}>
-                            {secure ?
+                        <TouchableOpacity style={styles.visible} onPress={() => setSecureRe(!secureRe)}>
+                            {secureRe ?
                                 <Image source={require('../assets/icons/visible.jpg')} style={{ width: '100%', height: '100%', color: '#E8E8E8' }} resizeMode='contain' />
                                 :
                                 <Image source={require('../assets/icons/notvisible.jpg')} style={{ width: '100%', height: '100%', color: '#E8E8E8' }} resizeMode='contain' />

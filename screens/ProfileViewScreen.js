@@ -8,7 +8,6 @@ import AppContext from '../context/AppContext'
 import { assets, COLORS, FONTS, SIZES } from '../constants'
 import Separator from '../components/Separator'
 import { avatar_basic, BaseURL, coverImage_basic } from '../ultis/Constants'
-import { firebase } from '@react-native-firebase/storage'
 
 const ProfileViewScreen = ({ route }) => {
     const appContext = useContext(AppContext)
