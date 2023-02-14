@@ -86,17 +86,9 @@ const HomeNavigator = () => {
   );
 };
 export default Home = () => {
-  // const navigationRef = useContext(NavigationContext);
-  // const name = navigationRef?.current?.getCurrentRoute()?.name;
-  // const enable = !(
-  //   name === "Friend" ||
-  //   name === "Notification" ||
-  //   name === "Setting"
-  // );
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.container}>
-        {/* <Statusbar /> */}
         <TopBar />
         <HomeNavigator />
       </SafeAreaView>

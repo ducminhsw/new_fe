@@ -22,11 +22,7 @@ import axios from "axios";
 
 const SuggestRequestItem = ({ item }) => {
   const appContext = useContext(AppContext)
-  // const onRefresh = useCallback(() => {
-  //   setRefreshing(true);
-  //   props.reload()
-  //   wait(1000).then(() => setRefreshing(false));
-  // }, []);
+  const [request, setRequest] = useState("Kết bạn")
   const sentFriendRequest = async (id) => {
     console.log(id)
     try {
@@ -40,8 +36,8 @@ const SuggestRequestItem = ({ item }) => {
           }
         }
       )
-      onRefresh()
       console.log(res.data)
+      setRequest("Đã gửi lời mời")
     } catch (error) {
       console.log(error)
       Alert.alert(
@@ -72,7 +68,7 @@ const SuggestRequestItem = ({ item }) => {
             marginHorizontal: 10, borderRadius: 8, height: 34, width: 160, margin: 10
           }}
             onPress={() => { sentFriendRequest(item.user_id) }}>
-            <Text style={{ fontSize: 15, color: "white", fontFamily: FONTS.medium }}>Kết bạn</Text>
+            <Text style={{ fontSize: 15, color: "white", fontFamily: FONTS.medium }}>{request}</Text>
           </TouchableOpacity>
         </View>
       </View>

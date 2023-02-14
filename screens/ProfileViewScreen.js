@@ -279,36 +279,13 @@ const ProfileViewScreen = ({ route }) => {
     }
 
     const getFriends = async () => {
-        const res = await axios.post(
-            `${BaseURL}/it4788/friend/get_user_friends`,
-            {},
-            {
-                params: {
-                    token: appContext.loginState.token,
-                    user_id: id,
-                    index: 0,
-                    count: 10
-                }
-            }
-        )
-        const DATA = res.data.data.friends
-        navigation.push("FriendList", DATA)
-        return res;
-    }
-
-    const refreshFlatList = (activeKey) => {
-        setState((prevState) => {
-            return {
-                deletedRowKey: activeKey
-            };
-        });
-        // flatListMsgRef.scrollToEnd({animated: true})
+        navigation.push("FriendList", id)
+        console.log("Another user_id: " + id)
     }
 
     const Item = ({ item }) => {
         return (
             <TouchableOpacity
-                // onPress={() => navigation.push("ProfileView", { item })}
                 style={{ alignItems: "center", marginHorizontal: 5 }}>
                 <Image
                     source={item.avatar}

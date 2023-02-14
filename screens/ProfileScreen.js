@@ -188,7 +188,7 @@ const ProfileScreen = () => {
                         </View>
 
                         <TouchableOpacity
-                            onPress={() => navigation.push("FriendList", data.friend_list)}
+                            onPress={() => navigation.push("FriendList", appContext.loginState.user_id)}
                             style={{
                                 backgroundColor: "#DDDDDD",
                                 height: 40,

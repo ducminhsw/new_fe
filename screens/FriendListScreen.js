@@ -1,7 +1,7 @@
 import { View, Text, Image, SafeAreaView, FlatList, TouchableOpacity } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
 import axios from 'axios'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import { assets, COLORS, FONTS, SIZES } from '../constants'
 import AppContext from '../context/AppContext'
@@ -10,9 +10,36 @@ import { avatar_basic, BaseURL } from '../ultis/Constants'
 const FriendListScreen = ({ route }) => {
     const navigation = useNavigation();
     const appContext = useContext(AppContext);
+    const isFocus = useIsFocused()
+    console.log(route.params)
 
-    const friend_data = route.params
-    // console.log(friend_data)
+    const user_id = route.params
+    const [friendlist, setFriendList] = useState([])
+
+    useEffect(() => {
+        const getFriends = async () => {
+            try {
+                const res = await axios.post(
+                    `${BaseURL}/it4788/friend/get_user_friends`,
+                    {},
+                    {
+                        params: {
+                            token: appContext.loginState.token,
+                            user_id: user_id,
+                            index: 0,
+                            count: 20
+                        }
+                    }
+                )
+                console.log("We calling api friend for: " + user_id)
+                setFriendList(res.data.data.friends)
+            } catch (error) {
+                console.log(error)
+                setFriendList([])
+            }
+        }
+        getFriends()
+    }, [navigation, isFocus])
 
     // get_friend_info
     const get_item_info = async (userId) => {
@@ -30,14 +57,14 @@ const FriendListScreen = ({ route }) => {
         if (user_info.id == appContext.loginState.user_id) {
             navigation.navigate("Profile")
         } else {
-            navigation.push("ProfileView", {user_info})
+            navigation.push("ProfileView", { user_info })
         }
     }
 
-    if (JSON.stringify(friend_data) == JSON.stringify([])) {
+    if (JSON.stringify(friendlist) == JSON.stringify([])) {
         return (
-            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                <Text style={{ fontFamily: FONTS.regular, fontSize: SIZES.large }}>No friend to show</Text>
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "white" }}>
+                <Text style={{ fontFamily: FONTS.regular, fontSize: SIZES.medium }}>Bạn chưa có một người bạn nào</Text>
             </View>
         )
     }
@@ -69,7 +96,7 @@ const FriendListScreen = ({ route }) => {
     return (
         <View style={{ flex: 1, backgroundColor: "white" }}>
             <FlatList
-                data={friend_data}
+                data={friendlist}
                 renderItem={({ item }) => <FriendItem item={item} />} />
         </View>
     )

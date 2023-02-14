@@ -43,10 +43,30 @@ const requestCheck = async (token, id, is_accept) => {
 }
 
 const FriendRequestItem = ({ item }) => {
+  const navigation = useNavigation()
   const appContext = useContext(AppContext)
+  const get_item_info = async (userId) => {
+    const res = await axios.post(
+        `${BaseURL}/it4788/user/get_user_info`,
+        {},
+        {
+            params: {
+                token: appContext.loginState.token,
+                user_id: userId
+            }
+        }
+    )
+    const user_info = res.data.data
+    if (user_info.id == appContext.loginState.user_id) {
+        navigation.navigate("Profile")
+    } else {
+        navigation.push("ProfileView", { user_info })
+    }
+}
   return (
     <View style={{ flex: 1, flexDirection: "row", padding: 10, paddingStart: 5, marginBottom: 10 }}>
-      <TouchableOpacity style={{ flex: 1, marginStart: 10 }}>
+      <TouchableOpacity style={{ flex: 1, marginStart: 10 }}
+      onPress={() => get_item_info(item.id)}>
         <Image
           source={{ uri: item.avatar ? item.avatar : avatar_basic.uri }}
           style={{ height: 60, width: 60, borderRadius: 200 }} />

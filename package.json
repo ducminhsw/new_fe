@@ -21,7 +21,7 @@
     "@react-navigation/native-stack": "^6.9.9",
     "@react-navigation/stack": "^6.3.11",
     "axios": "^1.2.4",
-    "deprecated-react-native-prop-types": "^2.2.0",
+    "deprecated-react-native-prop-types": "^2.3.0",
     "expo": "~47.0.12",
     "expo-image-picker": "^14.0.2",
     "expo-status-bar": "~1.4.2",
